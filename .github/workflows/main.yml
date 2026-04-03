@@ -1,0 +1,50 @@
+name: Pulling-code-on-server
+
+# Trigger deployment only on push to master branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploying-stage:
+    name: deploying-code-stage
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: taking-git-pull
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: cd /var/www/testlinksdesign/data/www/staging1.testlinksdesign.com && git pull
+
+
+      - name: deleting old build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: rm -rf /var/www/testlinksdesign/data/www/staging1.testlinksdesign.com/web/dist
+
+      - name: npm install
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: cd /var/www/testlinksdesign/data/www/staging1.testlinksdesign.com/ && npm install
+
+      - name: npm running build
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: cd /var/www/testlinksdesign/data/www/staging1.testlinksdesign.com/ && npm run build
