@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Artist Dashboard — Assigned Gigs</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0f0f10;
+        --panel: #00000065;
+        --muted: #ffffff;
+        --card: #00000065;
+        --accent1: #c589fe;
+        --accent2: #ffc446;
+        --highlight-start: #e4a246;
+        --highlight-end: #fb4c37;
+        --glass: rgba(255, 255, 255, 0.02);
+        --radius: 12px;
+        --text: #ffffff;
+        --sub: #bdbdbd;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+      }
+
+      /* Layout */
+      .app {
+        display: flex;
+        height: 100vh;
+        width: 100%;
+        position: relative;
+        background-color: var(--bg);
+      }
+
+      /* Background pattern overlay */
+      .app::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #b1d3ffab, #ffb3dda8, #ffd04ead);
+
+        z-index: 0;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 220px;
+        position: sticky;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        background-color: var(--panel);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 10;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .brand-title {
+        text-align: center;
+        width: 100%;
+        padding: 12px 2px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        white-space: nowrap;
+        font-size: 22px;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        color: transparent;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--sub);
+  text-decoration: none;
+  transition: all 0.18s;
+}
+.nav-item .nav-icon {
+  width: 28px;
+  display: inline-flex;
+  justify-content: center;
+}
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+}
+.nav-item.active {
+  color: #fff;
+  background-image: linear-gradient(
+    to bottom right,
+    var(--accent1),
+    var(--accent2)
+  );
+  box-shadow: 0 6px 18px rgba(214, 90, 167, 0.06);
+  font-weight: 600;
+}
+.nav-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+      /* Main area */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding: 22px;
+        overflow-y: auto;
+        z-index: 1;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        padding-bottom: 1rem;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .page-title {
+        margin: 0;
+        font-size: 28px;
+        color: #fff;
+      }
+      .page-sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      /* Top right small stat */
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .small {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding: 8px 12px;
+        border-radius: 10px;
+       background-color: var(--pannel);
+        min-width: 84px;
+      }
+      .stat-num {
+        font-size: 30px;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: #ffffff;
+      }
+
+      /* layout containers */
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .stats-row {
+        display: flex;
+        gap: 14px;
+      }
+      .stat {
+        flex: 1;
+        background-color: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 18px;
+        border-radius: var(--radius);
+        transition: all 0.3s ease;
+      }
+      .stat:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        border-color: rgba(251, 76, 55, 0.3);
+      }
+      .stat-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .stat-desc {
+        color: var(--muted);
+        font-size: 13px;
+      }
+    
+      /* Card */
+      .card {
+        background-color: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      }
+       .headerKnow {
+        font-size: small;
+        font-weight: 600;
+        font-family: sans-serif;
+        text-transform: uppercase;
+      }
+
+
+      /* Card title */
+      .card-title {
+        margin: 0 0 12px 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+      }
+      .card-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        margin-left: 1rem;
+        background: linear-gradient(90deg, var(--highlight-start), transparent);
+      }
+
+      /* Demo list */
+      .demo-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .demo-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        border-radius: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.01),
+          rgba(0, 0, 0, 0.06)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+      }
+      .demo-item:hover {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(0, 0, 0, 0.08)
+        );
+        border-color: rgba(251, 76, 55, 0.2);
+      }
+      .demo-left {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .demo-title {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 16px;
+      }
+      .demo-meta {
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        gap: 12px;
+      }
+      .demo-meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* Status badges */
+      .status-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .status-paid {
+        background: rgba(40, 167, 69, 0.15);
+        color: #5ee792;
+      }
+      .status-confirmed {
+        background: rgba(32, 107, 196, 0.15);
+        color: #6ea8fe;
+      }
+      .status-pending {
+        background: rgba(255, 193, 7, 0.15);
+        color: #ffda6a;
+      }
+      .status-completed {
+        background: rgba(111, 66, 193, 0.15);
+        color: #a370f7;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 10px 16px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        background: transparent;
+        color: var(--text);
+        font-weight: 600;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      .btn.primary {
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        border: none;
+        color: #fff;
+      }
+      .btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(251, 76, 55, 0.4);
+      }
+      .btn.ghost {
+        background: transparent;
+      }
+      .btn.ghost:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      /* small helpers */
+      .icon-btn {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        height: 45px;
+        width: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        color: var(--text);
+      }
+      .icon-btn:hover {
+        background: rgba(251, 76, 55, 0.2);
+        border-color: rgba(251, 76, 55, 0.5);
+      }
+      .badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .avatar-btn {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent1), var(--accent2));
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      .avatar-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(214, 90, 167, 0.4);
+      }
+
+      /* Filter section */
+      .filter-section {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .filter-btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--glass);
+        color: var(--sub);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .filter-btn.active {
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        color: #fff;
+        border: none;
+      }
+      .filter-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      /* responsive */
+      @media (max-width: 980px) {
+        .sidebar {
+          display: none;
+        }
+        .stats-row {
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main {
+          padding: 1rem;
+        }
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+        .top-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .demo-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+        .demo-item .btn {
+          align-self: flex-end;
+        }
+        .filter-section {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <img
+        src="https://stage7.demolinkdesign.com/wp-content/uploads/2025/07/image-39.png"
+        alt=""
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          opacity: 0.1;
+        "
+      />
+      <!-- Sidebar -->
+      <aside class="sidebar" style="z-index: 2">
+        <div class="brand">
+          <div class="brand-title">Artist Portal</div>
+        </div>
+
+        <nav class="nav">
+          <p class="headerKnow">Inspire</p>
+          <a href="requests.html" class="nav-item">
+            <span class="nav-icon"
+              ><i class="ri-git-pull-request-line"></i
+            ></span>
+            <span class="nav-text">Gig Requests</span>
+          </a>
+          <p class="headerKnow">Share</p>
+          <a href="index.html" class="nav-item">
+            <span class="nav-icon"><i class="ri-home-line"></i></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="gigs.html" class="nav-item active">
+            <span class="nav-icon"><i class="ri-task-line"></i></span>
+            <span class="nav-text">Assigned Gigs</span>
+          </a>
+          <p class="headerKnow">Heal</p>
+          <a href="calendar.html" class="nav-item ">
+            <span class="nav-icon"><i class="ri-calendar-line"></i></span>
+            <span class="nav-text">Gig Calendar</span>
+          </a>
+
+          <div class="nav-bottom">
+            <a href="#" class="nav-item">
+              <span class="nav-icon"><i class="ri-settings-3-line"></i></span>
+              <span class="nav-text">Settings</span>
+            </a>
+            <a href="#" class="nav-item">
+              <span class="nav-icon"><i class="ri-logout-box-line"></i></span>
+              <span class="nav-text">Logout</span>
+            </a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main content -->
+      <main class="main" style="z-index: 2">
+        <!-- Header -->
+        <header class="topbar">
+          <div
+            style="display: flex; justify-content: start; align-items: center; gap: 5rem"
+          >
+            <div>
+              <h1 class="page-title">Assigned Gigs</h1>
+              <p class="page-sub">Track and manage all your confirmed gigs</p>
+            </div>
+            <img
+              src="./icon.svg"
+              alt=""
+              style="object-fit: cover; scale: 1.3"
+            />
+          </div>
+          
+
+          <div class="top-actions">
+            <div class= small">
+              <div class="stat-num">08</div>
+              <div class="stat-label">This Month</div>
+            </div>
+
+            <button class="icon-btn">
+              <i class="ri-notification-2-fill"></i>
+              <span class="badge">2</span>
+            </button>
+            <button class="avatar-btn">JD</button>
+          </div>
+        </header>
+
+        <section class="container">
+          <!-- Gig stats -->
+          <div class="stats-row">
+            <div class="stat">
+              <div class="stat-inner">
+                <div class="stat-num">5</div>
+                <div class="stat-desc">Upcoming</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-inner">
+                <div class="stat-num">3</div>
+                <div class="stat-desc">Completed</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-inner">
+                <div class="stat-num">1</div>
+                <div class="stat-desc">Cancelled</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter section -->
+          <div class="filter-section">
+            <button class="filter-btn active">All Gigs</button>
+            <button class="filter-btn">Upcoming</button>
+            <button class="filter-btn">Completed</button>
+            <button class="filter-btn">Pending</button>
+          </div>
+
+          <!-- Gig list -->
+          <div class="card">
+            <h2 class="card-title">Your Gigs</h2>
+            <div class="demo-list">
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Tech Conference - San Francisco</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Sept 15 • 7:00
+                      PM</span
+                    >
+                    <span
+                      ><i class="ri-map-pin-line"></i> Moscone Center, CA</span
+                    >
+                    <span class="status-badge status-paid">Paid</span>
+                  </div>
+                </div>
+                <button class="btn primary">View Details</button>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Wedding Ceremony - New York</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Sept 20 • 9:00
+                      PM</span
+                    >
+                    <span><i class="ri-map-pin-line"></i> Plaza Hotel, NY</span>
+                    <span class="status-badge status-confirmed">Confirmed</span>
+                  </div>
+                </div>
+                <button class="btn primary">View Details</button>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Music Festival - Austin</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Sept 28 • 6:00
+                      PM</span
+                    >
+                    <span><i class="ri-map-pin-line"></i> Zilker Park, TX</span>
+                    <span class="status-badge status-pending">Pending</span>
+                  </div>
+                </div>
+                <button class="btn ghost">Pending</button>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Private Party - Los Angeles</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Oct 2 • 8:00
+                      PM</span
+                    >
+                    <span
+                      ><i class="ri-map-pin-line"></i> Beverly Hills, CA</span
+                    >
+                    <span class="status-badge status-paid">Paid</span>
+                  </div>
+                </div>
+                <button class="btn primary">View Details</button>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Corporate Event - Chicago</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Oct 10 • 7:30
+                      PM</span
+                    >
+                    <span><i class="ri-map-pin-line"></i> Navy Pier, IL</span>
+                    <span class="status-badge status-completed">Completed</span>
+                  </div>
+                </div>
+                <button class="btn primary">View Details</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Simple JavaScript for filter functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterButtons = document.querySelectorAll(".filter-btn");
+
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            // Remove active class from all buttons
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+
+            // Add active class to clicked button
+            this.classList.add("active");
+
+            // Here you would typically filter the gigs based on the selected filter
+            // For this example, we'll just log the filter type
+            console.log("Filter selected:", this.textContent);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

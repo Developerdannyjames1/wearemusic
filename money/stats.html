@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Artist Dashboard — Statistics</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #0f0f10;
+            --panel: #151515;
+            --muted: #9a9a9a;
+            --card: #141214;
+            --accent1: #e4a246;
+            --accent2: #d65aa7;
+            --highlight-start: #fb4c37;
+            --highlight-end: #e02870;
+            --glass: rgba(255, 255, 255, 0.02);
+            --radius: 12px;
+            --text: #ffffff;
+            --sub: #bdbdbd;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            background-color: var(--bg);
+        }
+        
+        .app::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(251, 76, 55, 0.08) 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(224, 40, 112, 0.08) 0%, transparent 25%);
+            z-index: 0;
+        }
+
+        .sidebar {
+            width: 220px;
+            position: sticky;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            background-color: var(--panel);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .brand-title {
+            text-align: center;
+            width: 100%;
+            padding: 12px 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--highlight-start), var(--highlight-end));
+            color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 10px;
+            color: var(--sub);
+            text-decoration: none;
+            transition: all 0.18s;
+        }
+        .nav-item .nav-icon {
+            width: 28px;
+            display: inline-flex;
+            justify-content: center;
+        }
+        .nav-item:hover {
+            background: var(--glass);
+            color: var(--text);
+        }
+        .nav-item.active {
+            color: #fff;
+            background-image: linear-gradient(to bottom right, var(--accent1), var(--accent2));
+            box-shadow: 0 6px 18px rgba(214, 90, 167, 0.2);
+            font-weight: 600;
+        }
+        .nav-bottom {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 22px;
+            overflow-y: auto;
+            z-index: 1;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            padding-bottom: 1rem;
+            justify-content: space-between;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .page-title {
+            margin: 0;
+            font-size: 28px;
+            color: #fff;
+        }
+        .page-sub {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .stat-card.small {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+            min-width: 84px;
+        }
+        .stat-num {
+            font-size: 30px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--highlight-start), var(--highlight-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .stats-row {
+            display: flex;
+            gap: 14px;
+        }
+        .stat {
+            flex: 1;
+            background-color: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 18px;
+            border-radius: var(--radius);
+            transition: all 0.3s ease;
+        }
+        .stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+            border-color: rgba(251, 76, 55, 0.3);
+        }
+        .stat-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+        }
+        .stat-desc {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 18px;
+            align-items: start;
+        }
+        .card {
+            background-color: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            margin: 0 0 12px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        .card-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            margin-left: 1rem;
+            background: linear-gradient(90deg, var(--highlight-start), transparent);
+        }
+
+        .chart-container {
+            background: var(--glass);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(251, 76, 55, 0.1), rgba(224, 40, 112, 0.1));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-small {
+            background: var(--glass);
+            padding: 15px;
+            border-radius: var(--radius);
+            text-align: center;
+        }
+
+        .stat-small-num {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--highlight-start), var(--highlight-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-small-label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--highlight-start), var(--highlight-end));
+            border-radius: 3px;
+        }
+
+        .top-tracks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .track-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--glass);
+            border-radius: var(--radius);
+            gap: 12px;
+        }
+
+        .track-rank {
+            font-weight: 700;
+            color: var(--highlight-start);
+            min-width: 20px;
+        }
+
+        .track-info {
+            flex: 1;
+        }
+
+        .track-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .track-stats {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            background: transparent;
+            color: var(--text);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn.primary {
+            background: linear-gradient(135deg, var(--highlight-start), var(--highlight-end));
+            border: none;
+            color: #fff;
+        }
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 76, 55, 0.4);
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .date-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .date-btn.active {
+            background: linear-gradient(135deg, var(--highlight-start), var(--highlight-end));
+            border-color: transparent;
+        }
+
+        .icon-btn {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            color: var(--text);
+        }
+        .icon-btn:hover {
+            background: rgba(251, 76, 55, 0.2);
+            border-color: rgba(251, 76, 55, 0.5);
+        }
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, var(--highlight-start), var(--highlight-end));
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .avatar-btn {
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .avatar-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(214, 90, 167, 0.4);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 2rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 980px) {
+            .sidebar {
+                display: none;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-row {
+                flex-direction: column;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                padding: 1rem;
+            }
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .top-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <img
+            src="https://stage7.demolinkdesign.com/wp-content/uploads/2025/07/image-39.png"
+            alt=""
+            style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+                opacity: 0.1;
+            "
+        />
+        
+        <aside class="sidebar" style="z-index: 2">
+            <div class="brand">
+                <div class="brand-title">Music Portal</div>
+            </div>
+
+            <nav class="nav">
+                <a href="index.html" class="nav-item">
+                    <span class="nav-icon"><i class="ri-home-line"></i></span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="music.html" class="nav-item">
+                    <span class="nav-icon"><i class="ri-music-2-line"></i></span>
+                    <span class="nav-text">Music Library</span>
+                </a>
+                <a href="streaming.html" class="nav-item">
+                    <span class="nav-icon"><i class="ri-live-line"></i></span>
+                    <span class="nav-text">Live Streaming</span>
+                </a>
+                <a href="stats.html" class="nav-item active">
+                    <span class="nav-icon"><i class="ri-bar-chart-line"></i></span>
+                    <span class="nav-text">Statistics</span>
+                </a>
+
+                <div class="nav-bottom">
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon"><i class="ri-settings-3-line"></i></span>
+                        <span class="nav-text">Settings</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span class="nav-icon"><i class="ri-logout-box-line"></i></span>
+                        <span class="nav-text">Logout</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main" style="z-index: 2">
+            <header class="topbar">
+                <div>
+                    <h1 class="page-title">Statistics & Analytics</h1>
+                    <p class="page-sub">Track your performance and growth</p>
+                </div>
+
+                <div class="top-actions">
+                    <div class="stat-card small">
+                        <div class="stat-num">1.2K</div>
+                        <div class="stat-label">Total Plays</div>
+                    </div>
+
+                    <button class="icon-btn">
+                        <i class="ri-notification-2-fill"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <button class="avatar-btn">JD</button>
+                </div>
+            </header>
+
+            <section class="container">
+                <div class="date-filter">
+                    <button class="date-btn active">Today</button>
+                    <button class="date-btn">Week</button>
+                    <button class="date-btn">Month</button>
+                    <button class="date-btn">Year</button>
+                    <button class="date-btn">All Time</button>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="stat-inner">
+                            <div class="stat-num">1.2K</div>
+                            <div class="stat-desc">Total Plays</div>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-inner">
+                            <div class="stat-num">45</div>
+                            <div class="stat-desc">Downloads</div>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-inner">
+                            <div class="stat-num">89</div>
+                            <div class="stat-desc">Likes</div>
+                        </div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-inner">
+                            <div class="stat-num">245</div>
+                            <div class="stat-desc">New Followers</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <div class="card column-left">
+                        <h2 class="card-title">Performance Overview</h2>
+
+                        <div class="chart-container">
+                            <div class="chart-placeholder">
+                                <i class="ri-bar-chart-fill" style="font-size: 48px; margin-right: 15px;"></i>
+                                Performance Charts Will Appear Here
+                            </div>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-small">
+                                <div class="stat-small-num">87%</div>
+                                <div class="stat-small-label">Completion Rate</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 87%;"></div>
+                                </div>
+                            </div>
+                            <div class="stat-small">
+                                <div class="stat-small-num">42%</div>
+                                <div class="stat-small-label">Engagement Rate</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 42%;"></div>
+                                </div>
+                            </div>
+                            <div class="stat-small">
+                                <div class="stat-small-num">63%</div>
+                                <div class="stat-small-label">Retention Rate</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 63%;"></div>
+                                </div>
+                            </div>
+                            <div class="stat-small">
+                                <div class="stat-small-num">28%</div>
+                                <div class="stat-small-label">Conversion Rate</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 28%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <h3 class="card-sub">Top Tracks</h3>
+                        <div class="top-tracks">
+                            <div class="track-item">
+                                <div class="track-rank">1</div>
+                                <div class="track-info">
+                                    <div class="track-name">Sunset Dreams</div>
+                                    <div class="track-stats">124 plays • 45 downloads</div>
+                                </div>
+                                <div class="track-stats">+15%</div>
+                            </div>
+                            <div class="track-item">
+                                <div class="track-rank">2</div>
+                                <div class="track-info">
+                                    <div class="track-name">Acoustic Session</div>
+                                    <div class="track-stats">87 plays • 32 downloads</div>
+                                </div>
+                                <div class="track-stats">+8%</div>
+                            </div>
+                            <div class="track-item">
+                                <div class="track-rank">3</div>
+                                <div class="track-info">
+                                    <div class="track-name">Midnight Melody</div>
+                                    <div class="track-stats">65 plays • 28 downloads</div>
+                                </div>
+                                <div class="track-stats">+12%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <aside class="card column-right">
+                        <h2 class="card-title">Audience Insights</h2>
+
+                        <div class="stats-grid">
+                            <div class="stat-small">
+                                <div class="stat-small-num">62%</div>
+                                <div class="stat-small-label">Male</div>
+                            </div>
+                            <div class="stat-small">
+                                <div class="stat-small-num">38%</div>
+                                <div class="stat-small-label">Female</div>
+                            </div>
+                            <div class="stat-small">
+                                <div class="stat-small-num">45%</div>
+                                <div class="stat-small-label">18-24</div>
+                            </div>
+                            <div class="stat-small">
+                                <div class="stat-small-num">32%</div>
+                                <div class="stat-small-label">25-34</div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <h3 class="card-sub">Top Locations</h3>
+                        <div class="top-tracks">
+                            <div class="track-item">
+                                <div class="track-rank">1</div>
+                                <div class="track-info">
+                                    <div class="track-name">United States</div>
+                                    <div class="track-stats">425 listeners</div>
+                                </div>
+                            </div>
+                            <div class="track-item">
+                                <div class="track-rank">2</div>
+                                <div class="track-info">
+                                    <div class="track-name">United Kingdom</div>
+                                    <div class="track-stats">218 listeners</div>
+                                </div>
+                            </div>
+                            <div class="track-item">
+                                <div class="track-rank">3</div>
+                                <div class="track-info">
+                                    <div class="track-name">Canada</div>
+                                    <div class="track-stats">156 listeners</div>
+                                </div>
+                            </div>
+                            <div class="track-item">
+                                <div class="track-rank">4</div>
+                                <div class="track-info">
+                                    <div class="track-name">Australia</div>
+                                    <div class="track-stats">98 listeners</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <h3 class="card-sub">Export Reports</h3>
+                        <div class="quick-actions">
+                            <button class="btn">Download CSV</button>
+                            <button class="btn">Generate PDF</button>
+                            <button class="btn">Share Report</button>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Date filter functionality
+        document.querySelectorAll('.date-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Simulate data loading
+                const stats = document.querySelectorAll('.stat-num');
+                stats[0].textContent = Math.floor(Math.random() * 2000) + 500;
+                stats[1].textContent = Math.floor(Math.random() * 100) + 20;
+                stats[2].textContent = Math.floor(Math.random() * 150) + 30;
+                stats[3].textContent = Math.floor(Math.random() * 300) + 50;
+            });
+        });
+
+        // Simulate live data updates
+        setInterval(() => {
+            const plays = document.querySelectorAll('.stat-num')[0];
+            const currentPlays = parseInt(plays.textContent.replace('K', '000'));
+            plays.textContent = (currentPlays + Math.floor(Math.random() * 5)) + 'K';
+        }, 5000);
+    </script>
+</body>
+</html>

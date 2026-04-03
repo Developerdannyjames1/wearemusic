@@ -1,0 +1,140 @@
+:root {
+  --wam-bg: #000000;
+  --wam-gold: #c9a227;
+  --wam-purple-deep: #1a0130;
+  --wam-purple-mid: #3b024f;
+  --wam-magenta: #de2574;
+  --wam-text: #ffffff;
+  --wam-muted: #9ca3af;
+  --font-display: 'Raleway', system-ui, sans-serif;
+  --font-body: 'Abel', system-ui, sans-serif;
+  --font-accent: 'Pacifico', cursive;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--wam-bg);
+  color: var(--wam-text);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--wam-magenta);
+}
+
+.wam-gradient-text {
+  background: linear-gradient(to right, #fa4a3b, #de2574);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.wam-stroke-title {
+  color: transparent;
+  -webkit-text-stroke: 2px #8f8f8f;
+  letter-spacing: -0.04em;
+}
+
+.wam-panel {
+  background: linear-gradient(145deg, rgba(26, 1, 48, 0.9), rgba(0, 0, 0, 0.95));
+  border: 1px solid rgba(201, 162, 39, 0.25);
+  border-radius: 12px;
+}
+
+.wam-panel-interactive {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.wam-panel-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(222, 37, 116, 0.12);
+  border-color: rgba(201, 162, 39, 0.45);
+}
+
+.layout-header {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.35));
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.15);
+}
+
+.nav-link-wam {
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s ease;
+}
+
+.nav-link-wam:hover {
+  color: var(--wam-magenta);
+}
+
+/* Dark theme forms: placeholders must stay readable on black fields */
+.form-control.bg-black::placeholder,
+.form-control.bg-black::-webkit-input-placeholder,
+.form-control.bg-black::-moz-placeholder,
+textarea.form-control.bg-black::placeholder,
+input.form-control.bg-black::placeholder,
+.form-select.bg-black::placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+  opacity: 1;
+}
+
+.form-control.bg-black:focus::placeholder,
+textarea.form-control.bg-black:focus::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.form-control.bg-transparent.text-white::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+}
+
+.form-select.bg-black,
+.form-select.bg-black:focus {
+  color: #fff;
+}
+
+.form-select.bg-black option {
+  background: #141414;
+  color: #fff;
+}
+
+/* Artist / Admin / Coach / Client portals (ap-root) */
+.ap-root .form-control::placeholder,
+.ap-root .form-control::-webkit-input-placeholder,
+.ap-root textarea::placeholder,
+.ap-root input::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+}
+
+.ap-root .form-select option {
+  background: #141414;
+  color: #fff;
+}

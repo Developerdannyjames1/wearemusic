@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Artist Dashboard — Gig Requests</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0f0f10;
+        --panel: #00000065;
+        --muted: #ffffff;
+        --card: #00000065;
+        --accent1: #c589fe;
+        --accent2: #ffc446;
+        --highlight-start: #e4a246;
+        --highlight-end: #fb4c37;
+        --glass: rgba(255, 255, 255, 0.02);
+        --radius: 12px;
+        --text: #ffffff;
+        --sub: #bdbdbd;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+          Roboto, "Helvetica Neue", Arial;
+      }
+
+      /* Layout */
+      .app {
+        display: flex;
+        height: 100vh;
+        width: 100%;
+        position: relative;
+        background-color: var(--bg);
+      }
+
+      /* Background pattern overlay */
+      .app::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #b1d3ffab, #ffb3dda8, #ffd04ead);
+
+        z-index: 0;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 220px;
+        position: sticky;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        background-color: var(--panel);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 10;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .headerKnow {
+        font-size: small;
+        font-weight: 600;
+        font-family: sans-serif;
+        text-transform: uppercase;
+      }
+
+      .brand-title {
+        text-align: center;
+        width: 100%;
+        padding: 12px 2px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        white-space: nowrap;
+        font-size: 22px;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        color: transparent;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+
+      /* Nav */
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        border-radius: 10px;
+        color: var(--sub);
+        text-decoration: none;
+        transition: all 0.18s;
+      }
+      .nav-item .nav-icon {
+        width: 28px;
+        display: inline-flex;
+        justify-content: center;
+      }
+      .nav-item:hover {
+        background: var(--glass);
+        color: var(--text);
+      }
+      .nav-item.active {
+        color: #fff;
+        background-image: linear-gradient(
+          to bottom right,
+          var(--accent1),
+          var(--accent2)
+        );
+        box-shadow: 0 6px 18px rgba(214, 90, 167, 0.2);
+        font-weight: 600;
+      }
+      .nav-bottom {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      /* Main area */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding: 22px;
+        overflow-y: auto;
+        z-index: 1;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        padding-bottom: 1rem;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .page-title {
+        margin: 0;
+        font-size: 28px;
+        color: #fff;
+      }
+      .page-sub {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      /* Top right small stat */
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .stat-card.small {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          transparent
+        );
+        min-width: 84px;
+      }
+      .stat-num {
+        font-size: 30px;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 800;
+      }
+      .stat-label {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* layout containers */
+      .container {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .stats-row {
+        display: flex;
+        gap: 14px;
+      }
+      .stat {
+        flex: 1;
+        background-color: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 18px;
+        border-radius: var(--radius);
+        transition: all 0.3s ease;
+      }
+      .stat:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        border-color: rgba(251, 76, 55, 0.3);
+      }
+      .stat-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .stat-desc {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* Card */
+      .card {
+        background-color: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Card title */
+      .card-title {
+        margin: 0 0 12px 0;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+      }
+      .card-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        margin-left: 1rem;
+        background: linear-gradient(90deg, var(--highlight-start), transparent);
+      }
+
+      /* Demo list */
+      .demo-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .demo-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        border-radius: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.01),
+          rgba(0, 0, 0, 0.06)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+      }
+      .demo-item:hover {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(0, 0, 0, 0.08)
+        );
+        border-color: rgba(251, 76, 55, 0.2);
+      }
+      .demo-left {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+      }
+      .demo-title {
+        font-weight: 600;
+        color: var(--text);
+        font-size: 16px;
+      }
+      .demo-meta {
+        font-size: 13px;
+        color: var(--muted);
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .demo-meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* Status badges */
+      .status-badge {
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .status-pending {
+        background: rgba(255, 193, 7, 0.15);
+        color: #ffda6a;
+      }
+      .status-accepted {
+        background: rgba(40, 167, 69, 0.15);
+        color: #5ee792;
+      }
+      .status-declined {
+        background: rgba(220, 53, 69, 0.15);
+        color: #ff6b7a;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 10px 16px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        background: transparent;
+        color: var(--text);
+        font-weight: 600;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+      .btn.primary {
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        border: none;
+        color: #fff;
+      }
+      .btn.primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(251, 76, 55, 0.4);
+      }
+      .btn.danger {
+        background: rgba(220, 53, 69, 0.15);
+        color: #ff6b7a;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+      }
+      .btn.danger:hover {
+        background: rgba(220, 53, 69, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn.ghost {
+        background: transparent;
+      }
+      .btn.ghost:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      /* Form row */
+      .form-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* small helpers */
+      .icon-btn {
+        background-color: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        height: 45px;
+        width: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        color: var(--text);
+      }
+      .icon-btn:hover {
+        background: rgba(251, 76, 55, 0.2);
+        border-color: rgba(251, 76, 55, 0.5);
+      }
+      .badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 700;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .avatar-btn {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent1), var(--accent2));
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      .avatar-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(214, 90, 167, 0.4);
+      }
+
+      /* Filter section */
+      .filter-section {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+      .filter-btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: var(--glass);
+        color: var(--sub);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .filter-btn.active {
+        background: linear-gradient(
+          135deg,
+          var(--highlight-start),
+          var(--highlight-end)
+        );
+        color: #fff;
+        border: none;
+      }
+      .filter-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      /* Request details */
+      .request-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .request-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* responsive */
+      @media (max-width: 980px) {
+        .sidebar {
+          display: none;
+        }
+        .stats-row {
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main {
+          padding: 1rem;
+        }
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+        .top-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .demo-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+        .demo-item .form-row {
+          align-self: flex-end;
+        }
+        .filter-section {
+          flex-direction: column;
+        }
+        .demo-meta {
+          flex-direction: column;
+          gap: 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <img
+        src="https://stage7.demolinkdesign.com/wp-content/uploads/2025/07/image-39.png"
+        alt=""
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          opacity: 0.1;
+        "
+      />
+
+      <!-- Sidebar -->
+      <aside class="sidebar" style="z-index: 2">
+        <div class="brand">
+          <div class="brand-title">Artist Portal</div>
+        </div>
+
+        <nav class="nav">
+          <p class="headerKnow">Inspire</p>
+          <a href="requests.html" class="nav-item active">
+            <span class="nav-icon"
+              ><i class="ri-git-pull-request-line"></i
+            ></span>
+            <span class="nav-text">Gig Requests</span>
+          </a>
+          <p class="headerKnow">Share</p>
+          <a href="index.html" class="nav-item">
+            <span class="nav-icon"><i class="ri-home-line"></i></span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+          <a href="gigs.html" class="nav-item">
+            <span class="nav-icon"><i class="ri-task-line"></i></span>
+            <span class="nav-text">Assigned Gigs</span>
+          </a>
+          <p class="headerKnow">Heal</p>
+          <a href="calendar.html" class="nav-item">
+            <span class="nav-icon"><i class="ri-calendar-line"></i></span>
+            <span class="nav-text">Gig Calendar</span>
+          </a>
+
+          <div class="nav-bottom">
+            <a href="#" class="nav-item">
+              <span class="nav-icon"><i class="ri-settings-3-line"></i></span>
+              <span class="nav-text">Settings</span>
+            </a>
+            <a href="#" class="nav-item">
+              <span class="nav-icon"><i class="ri-logout-box-line"></i></span>
+              <span class="nav-text">Logout</span>
+            </a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main content -->
+      <main class="main" style="z-index: 2">
+        <!-- Header -->
+        <header class="topbar">
+          <div
+            style="display: flex; justify-content: start; align-items: center; gap: 5rem"
+          >
+            <div>
+              <h1 class="page-title">Gig Requests</h1>
+              <p class="page-sub">
+                Review, accept or decline new gig invitations
+              </p>
+            </div>
+            <img
+              src="./icon.svg"
+              alt=""
+              style="object-fit: cover; scale: 1.3"
+            />
+          </div>
+
+          <div class="top-actions">
+            <div class="stat-card small">
+              <div class="stat-num">05</div>
+              <div class="stat-label">New Requests</div>
+            </div>
+
+            <button class="icon-btn">
+              <i class="ri-notification-2-fill"></i>
+              <span class="badge">4</span>
+            </button>
+            <button class="avatar-btn">JD</button>
+          </div>
+        </header>
+
+        <section class="container">
+          <!-- Request stats -->
+          <div class="stats-row">
+            <div class="stat">
+              <div class="stat-inner">
+                <div class="stat-num">3</div>
+                <div class="stat-desc">Pending</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-inner">
+                <div class="stat-num">1</div>
+                <div class="stat-desc">Accepted</div>
+              </div>
+            </div>
+            <div class="stat">
+              <div class="stat-inner">
+                <div class="stat-num">1</div>
+                <div class="stat-desc">Declined</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter section -->
+          <div class="filter-section">
+            <button class="filter-btn active">All Requests</button>
+            <button class="filter-btn">Pending</button>
+            <button class="filter-btn">Accepted</button>
+            <button class="filter-btn">Declined</button>
+          </div>
+
+          <!-- Requests list -->
+          <div class="card">
+            <h2 class="card-title">Incoming Requests</h2>
+            <div class="demo-list">
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Charity Concert - Seattle</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Sept 18 • 8:00
+                      PM</span
+                    >
+                    <span
+                      ><i class="ri-map-pin-line"></i> Climate Pledge Arena,
+                      WA</span
+                    >
+                    <span class="status-badge status-pending">Pending</span>
+                  </div>
+                  <div class="request-details">
+                    <div class="request-detail">
+                      <i class="ri-money-dollar-circle-line"></i>
+                      <span>Offer: $1,200</span>
+                    </div>
+                    <div class="request-detail">
+                      <i class="ri-time-line"></i>
+                      <span>Duration: 2 hours</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <button class="btn primary">Accept</button>
+                  <button class="btn danger">Decline</button>
+                </div>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Corporate Gala - Boston</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Sept 25 • 9:00
+                      PM</span
+                    >
+                    <span
+                      ><i class="ri-map-pin-line"></i> Seaport Hotel, MA</span
+                    >
+                    <span class="status-badge status-pending">Pending</span>
+                  </div>
+                  <div class="request-details">
+                    <div class="request-detail">
+                      <i class="ri-money-dollar-circle-line"></i>
+                      <span>Offer: $2,500</span>
+                    </div>
+                    <div class="request-detail">
+                      <i class="ri-time-line"></i>
+                      <span>Duration: 3 hours</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <button class="btn primary">Accept</button>
+                  <button class="btn danger">Decline</button>
+                </div>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Private Birthday - Miami</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Oct 5 • 7:00
+                      PM</span
+                    >
+                    <span><i class="ri-map-pin-line"></i> South Beach, FL</span>
+                    <span class="status-badge status-accepted">Accepted</span>
+                  </div>
+                  <div class="request-details">
+                    <div class="request-detail">
+                      <i class="ri-money-dollar-circle-line"></i>
+                      <span>Offer: $1,800</span>
+                    </div>
+                    <div class="request-detail">
+                      <i class="ri-time-line"></i>
+                      <span>Duration: 2.5 hours</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn ghost">Accepted</button>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Annual Meetup - Denver</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Oct 10 • 6:30
+                      PM</span
+                    >
+                    <span
+                      ><i class="ri-map-pin-line"></i> Convention Center,
+                      CO</span
+                    >
+                    <span class="status-badge status-declined">Declined</span>
+                  </div>
+                  <div class="request-details">
+                    <div class="request-detail">
+                      <i class="ri-money-dollar-circle-line"></i>
+                      <span>Offer: $1,000</span>
+                    </div>
+                    <div class="request-detail">
+                      <i class="ri-time-line"></i>
+                      <span>Duration: 2 hours</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="btn ghost">Declined</button>
+              </div>
+
+              <div class="demo-item">
+                <div class="demo-left">
+                  <div class="demo-title">Wedding Reception - San Diego</div>
+                  <div class="demo-meta">
+                    <span
+                      ><i class="ri-calendar-event-line"></i> Oct 15 • 5:00
+                      PM</span
+                    >
+                    <span
+                      ><i class="ri-map-pin-line"></i> Hotel del Coronado,
+                      CA</span
+                    >
+                    <span class="status-badge status-pending">Pending</span>
+                  </div>
+                  <div class="request-details">
+                    <div class="request-detail">
+                      <i class="ri-money-dollar-circle-line"></i>
+                      <span>Offer: $2,200</span>
+                    </div>
+                    <div class="request-detail">
+                      <i class="ri-time-line"></i>
+                      <span>Duration: 4 hours</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <button class="btn primary">Accept</button>
+                  <button class="btn danger">Decline</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Simple JavaScript for filter functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        const demoItems = document.querySelectorAll(".demo-item");
+
+        filterButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            // Remove active class from all buttons
+            filterButtons.forEach((btn) => btn.classList.remove("active"));
+
+            // Add active class to clicked button
+            this.classList.add("active");
+
+            // Filter the gig requests based on the selected filter
+            const filter = this.textContent.toLowerCase();
+
+            demoItems.forEach((item) => {
+              if (filter === "all requests") {
+                item.style.display = "flex";
+              } else {
+                const status = item
+                  .querySelector(".status-badge")
+                  .textContent.toLowerCase();
+                if (status === filter) {
+                  item.style.display = "flex";
+                } else {
+                  item.style.display = "none";
+                }
+              }
+            });
+          });
+        });
+
+        // Add click handlers for accept/decline buttons
+        const acceptButtons = document.querySelectorAll(".btn.primary");
+        const declineButtons = document.querySelectorAll(".btn.danger");
+
+        acceptButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const item = this.closest(".demo-item");
+            const statusBadge = item.querySelector(".status-badge");
+            const buttonsContainer = item.querySelector(".form-row");
+
+            statusBadge.textContent = "Accepted";
+            statusBadge.className = "status-badge status-accepted";
+
+            // Replace buttons with status message
+            buttonsContainer.innerHTML =
+              '<button class="btn ghost">Accepted</button>';
+
+            // Update stats
+            updateStats();
+
+            // Show confirmation message
+            showNotification("Gig request accepted successfully!");
+          });
+        });
+
+        declineButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const item = this.closest(".demo-item");
+            const statusBadge = item.querySelector(".status-badge");
+            const buttonsContainer = item.querySelector(".form-row");
+
+            statusBadge.textContent = "Declined";
+            statusBadge.className = "status-badge status-declined";
+
+            // Replace buttons with status message
+            buttonsContainer.innerHTML =
+              '<button class="btn ghost">Declined</button>';
+
+            // Update stats
+            updateStats();
+
+            // Show confirmation message
+            showNotification("Gig request declined.");
+          });
+        });
+
+        function updateStats() {
+          // This would typically update the stats based on the new status
+          console.log("Stats would be updated here");
+        }
+
+        function showNotification(message) {
+          // Create a temporary notification
+          const notification = document.createElement("div");
+          notification.textContent = message;
+          notification.style.position = "fixed";
+          notification.style.bottom = "20px";
+          notification.style.right = "20px";
+          notification.style.background = "var(--highlight-start)";
+          notification.style.color = "white";
+          notification.style.padding = "12px 20px";
+          notification.style.borderRadius = "8px";
+          notification.style.zIndex = "1000";
+          notification.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+
+          document.body.appendChild(notification);
+
+          // Remove after 3 seconds
+          setTimeout(() => {
+            notification.style.opacity = "0";
+            notification.style.transition = "opacity 0.5s";
+            setTimeout(() => {
+              document.body.removeChild(notification);
+            }, 500);
+          }, 3000);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,281 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// --- Core identity ---
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  role         String   @default("STUDENT")
+  phone        String?
+  bio          String?
+  avatarUrl    String?
+  timezone     String?  @default("UTC")
+  currency     String?  @default("USD")
+  stripeCustomerId   String?
+  stripeConnectId    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  lessons         Lesson[]
+  clientBookings  Booking[]      @relation("BookingClient")
+  artistBookings  Booking[]      @relation("BookingArtist")
+  gigs            Gig[]
+  enrollments     Enrollment[]
+  transactions    Transaction[]
+  mediaItems      MediaItem[]
+  coachProfile    CoachProfile?
+  artistProfile   ArtistProfile?
+  notifications   Notification[]
+  mediaPurchases  MediaPurchase[]
+  auditLogs       AuditLog[]     @relation("AuditActor")
+  coursesTeaching Course[]       @relation("CourseCoach")
+}
+
+// --- JM Method: courses & lessons ---
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  division    String   @default("JM_METHOD")
+  level       String?
+  price       Float    @default(0)
+  currency    String   @default("USD")
+  isPublished Boolean  @default(true)
+  coachId     String
+  coach       User     @relation("CourseCoach", fields: [coachId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lessons      Lesson[]
+  enrollments  Enrollment[]
+
+  @@index([coachId])
+  @@index([division])
+}
+
+model Lesson {
+  id           String   @id @default(cuid())
+  title        String
+  description  String?
+  museScoreUrl String?
+  division     String   @default("JM_METHOD")
+  orderIndex   Int      @default(0)
+  durationMinutes Int?
+  courseId     String?
+  course       Course?  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  coachId      String
+  coach        User     @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@index([coachId])
+  @@index([courseId])
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  studentId  String
+  student    User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  courseId   String
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress   Int      @default(0)
+  status     String   @default("active")
+  enrolledAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+}
+
+// --- ALMS: artist & gigs ---
+
+model ArtistProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stageName    String?
+  bio          String?
+  genres       String?
+  city         String?
+  websiteUrl   String?
+  spotifyUrl   String?
+  instagramUrl String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model CoachProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  headline     String?
+  bio          String?
+  specialties  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Gig {
+  id          String    @id @default(cuid())
+  artistId    String
+  artist      User      @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  title       String
+  venue       String?
+  division    String    @default("ALMS")
+  status      String    @default("open")
+  fee         Float?
+  currency    String    @default("USD")
+  eventStart  DateTime?
+  notes       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([artistId])
+}
+
+model Booking {
+  id          String    @id @default(cuid())
+  clientId    String
+  client      User      @relation("BookingClient", fields: [clientId], references: [id], onDelete: Cascade)
+  artistId    String?
+  artist      User?     @relation("BookingArtist", fields: [artistId], references: [id], onDelete: SetNull)
+  division    String    @default("ALMS")
+  status      String    @default("pending")
+  packageName String?
+  notes       String?
+  budget      Float?
+  currency    String    @default("USD")
+  eventDate   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([clientId])
+  @@index([artistId])
+}
+
+// Public gig inquiry before account creation (ALMS Entertainment)
+model BookingLead {
+  id           String    @id @default(cuid())
+  email        String
+  name         String?
+  phone        String?
+  artistId     String?
+  gigId        String?
+  packageName  String?
+  notes        String?
+  eventDate    DateTime?
+  budget       Float?
+  currency     String    @default("USD")
+  division     String    @default("ALMS")
+  status       String    @default("new")
+  createdAt    DateTime  @default(now())
+
+  @@index([email])
+  @@index([status])
+}
+
+// --- 100th Monkey: media & commerce ---
+
+model MediaItem {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  mediaType     String
+  url           String?
+  thumbnailUrl  String?
+  durationSeconds Int?
+  division      String   @default("MONKEY_STUDIOS")
+  isPremium     Boolean  @default(false)
+  price         Float    @default(0)
+  currency      String   @default("USD")
+  playCount     Int      @default(0)
+  ownerId       String?
+  owner         User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  purchases MediaPurchase[]
+
+  @@index([ownerId])
+  @@index([division])
+}
+
+model MediaPurchase {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaId   String
+  media     MediaItem @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  amount    Float
+  currency  String   @default("USD")
+  status    String   @default("completed")
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([mediaId])
+}
+
+model Transaction {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount                Float
+  currency              String   @default("USD")
+  status                String
+  type                  String
+  description           String?
+  stripePaymentIntentId String?
+  createdAt             DateTime @default(now())
+
+  @@index([userId])
+  @@index([type])
+}
+
+// --- Platform ---
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String?
+  type      String    @default("info")
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  resource   String
+  resourceId String?
+  details    String?
+  createdAt  DateTime @default(now())
+
+  @@index([actorId])
+  @@index([resource])
+}
+
+model PasswordReset {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

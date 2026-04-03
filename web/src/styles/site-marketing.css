@@ -1,0 +1,418 @@
+/* Warm rustic marketing layer (Abel / Pacifico / Raleway in index.html) */
+:root {
+  --wam-rust: #8b4513;
+  --wam-terracotta: #c65d3b;
+  --wam-cream: #f4e8d8;
+  --wam-bark: #3d2914;
+  --wam-sage: #6b7f5a;
+}
+
+.site-nav {
+  background: linear-gradient(180deg, rgba(61, 41, 20, 0.92), rgba(20, 12, 8, 0.88));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+
+.site-nav .navbar-brand {
+  font-family: var(--font-accent);
+  font-size: 1.35rem;
+  color: var(--wam-cream) !important;
+}
+
+.site-nav .nav-link {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  color: rgba(244, 232, 216, 0.88) !important;
+  padding: 0.5rem 0.65rem !important;
+  border-radius: 8px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus {
+  color: #fff !important;
+  background: rgba(222, 37, 116, 0.15);
+}
+
+.site-nav .btn-book {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  color: var(--wam-cream);
+  background: rgba(139, 69, 19, 0.35);
+}
+
+.site-nav .btn-book:hover {
+  background: rgba(222, 37, 116, 0.35);
+  border-color: rgba(222, 37, 116, 0.55);
+  color: #fff;
+}
+
+.site-nav .btn-signin {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.marketing-main {
+  padding-top: 4.75rem;
+}
+
+.marketing-hero {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 30% 20%, rgba(139, 69, 19, 0.35), transparent 55%),
+    radial-gradient(ellipse at 70% 80%, rgba(59, 2, 79, 0.45), transparent 50%), #0a0604;
+}
+
+.marketing-hero--jm {
+  background: radial-gradient(ellipse at 20% 30%, rgba(201, 162, 39, 0.2), transparent 50%),
+    linear-gradient(165deg, #1a0a06 0%, #0a0604 100%);
+}
+
+.marketing-hero--alms {
+  background: radial-gradient(ellipse at 80% 20%, rgba(222, 37, 116, 0.18), transparent 45%),
+    linear-gradient(165deg, #14081a 0%, #0a0604 100%);
+}
+
+.marketing-hero--monkey {
+  background: radial-gradient(ellipse at 50% 0%, rgba(107, 127, 90, 0.25), transparent 55%),
+    linear-gradient(165deg, #0d120a 0%, #050804 100%);
+}
+
+.wam-triangle-row {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.wam-triangle-image-row {
+  align-items: center;
+  gap: clamp(0.4rem, 2.4vw, 1.8rem);
+}
+
+.wam-triangle-image-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  line-height: 1;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.55));
+}
+
+.wam-triangle-image-link:hover {
+  transform: translateY(-4px) scale(1.025);
+  filter: drop-shadow(0 16px 36px rgba(222, 37, 116, 0.25));
+}
+
+.wam-triangle-image {
+  width: clamp(190px, 28vw, 350px);
+  height: auto;
+}
+
+.wam-triangle-image-row .wam-triangle-image-link:nth-child(2) .wam-triangle-image {
+  width: clamp(110px, 17vw, 210px);
+}
+
+.wam-triangle-image-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.82rem, 1.35vw, 1.05rem);
+  font-weight: 700;
+  color: rgba(244, 232, 216, 0.95);
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.wam-triangle-card {
+  flex: 1 1 220px;
+  max-width: 320px;
+  min-height: 160px;
+  padding: 1.5rem 1.25rem 1.75rem;
+  text-align: center;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(201, 162, 39, 0.12), rgba(59, 2, 79, 0.35));
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.wam-triangle-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.wam-triangle-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  margin: 0 0 0.35rem;
+  color: var(--wam-cream);
+}
+
+.wam-triangle-card p {
+  font-size: 0.85rem;
+  color: rgba(244, 232, 216, 0.75);
+  margin: 0;
+}
+
+/* Banner carousel */
+.wam-banner-carousel {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.wam-banner-slide {
+  min-height: 220px;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 162, 39, 0.2);
+  background: linear-gradient(135deg, rgba(61, 41, 20, 0.6), rgba(26, 1, 48, 0.55));
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.wam-banner-slide h2 {
+  font-family: var(--font-display);
+  color: var(--wam-cream);
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.wam-banner-slide p {
+  color: rgba(244, 232, 216, 0.8);
+  max-width: 520px;
+  margin-bottom: 0;
+}
+
+.wam-banner-dots {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.wam-banner-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 0;
+  cursor: pointer;
+}
+
+.wam-banner-dots button[aria-current='true'] {
+  background: var(--wam-magenta);
+}
+
+/* Discipline wheel */
+.wam-wheel-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0 3rem;
+}
+
+.wam-wheel {
+  position: relative;
+  width: min(360px, 90vw);
+  height: min(360px, 90vw);
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #5c3d2e 0deg 51.4deg,
+    #6b4f3a 51.4deg 102.8deg,
+    #7a5c45 102.8deg 154.2deg,
+    #8b6914 154.2deg 205.6deg,
+    #5a4a3a 205.6deg 257deg,
+    #4a5d4a 257deg 308.4deg,
+    #3d4a5c 308.4deg 360deg
+  );
+  box-shadow:
+    inset 0 0 0 8px rgba(0, 0, 0, 0.25),
+    0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+.wam-wheel::after {
+  content: '';
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #2a1810, #0f0a08);
+  border: 2px solid rgba(201, 162, 39, 0.35);
+}
+
+.wam-wheel-center {
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.75rem;
+  background: rgba(15, 10, 8, 0.92);
+  border: 1px solid rgba(201, 162, 39, 0.3);
+}
+
+.wam-wheel-center span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  color: var(--wam-cream);
+}
+
+.wam-wheel-item {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: clamp(0.65rem, 2.2vw, 0.85rem);
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  cursor: default;
+  padding: 0.2rem 0.35rem;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
+}
+
+.wam-wheel-item:hover {
+  transform: translate(-50%, -50%) scale(1.08) !important;
+  z-index: 4;
+}
+
+.marketing-section-title {
+  font-family: var(--font-display);
+  color: var(--wam-cream);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.marketing-prose {
+  color: rgba(244, 232, 216, 0.88);
+  line-height: 1.65;
+  max-width: 720px;
+}
+
+.marketing-prose a {
+  color: var(--wam-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.marketing-prose a:hover {
+  color: #fff;
+}
+
+/* Book a gig page styling */
+.book-gig-page {
+  background:
+    radial-gradient(ellipse at 78% 18%, rgba(255, 89, 89, 0.11), transparent 52%),
+    radial-gradient(ellipse at 12% 72%, rgba(88, 0, 120, 0.18), transparent 50%),
+    linear-gradient(165deg, #0c060c 0%, #180315 48%, #0b0610 100%);
+}
+
+.book-gig-lead {
+  max-width: 670px;
+  color: rgba(245, 239, 248, 0.86);
+}
+
+.book-gig-form {
+  border-radius: 14px;
+  border: 1px solid rgba(164, 116, 169, 0.24);
+  background: linear-gradient(165deg, rgba(28, 10, 33, 0.88), rgba(22, 6, 30, 0.9));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+}
+
+.book-gig-label {
+  color: rgba(223, 198, 231, 0.82) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
+
+.book-gig-control {
+  border-radius: 10px;
+  border: 1px solid rgba(166, 115, 173, 0.3) !important;
+  background-color: rgba(0, 0, 0, 0.86) !important;
+  color: #f7f5fa !important;
+  min-height: 42px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.book-gig-control::placeholder {
+  color: rgba(214, 201, 220, 0.38) !important;
+}
+
+.book-gig-control:focus {
+  border-color: rgba(248, 125, 95, 0.75) !important;
+  box-shadow: 0 0 0 0.2rem rgba(245, 122, 88, 0.16) !important;
+  background-color: rgba(2, 1, 3, 0.95) !important;
+}
+
+.book-gig-control option {
+  background: #141118;
+  color: #f7f5fa;
+}
+
+.book-gig-notes {
+  min-height: 110px;
+}
+
+.book-gig-btn {
+  min-width: 168px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: #fff;
+  border: none;
+  background: linear-gradient(90deg, #f1c063, #ef8f4d 45%, #ff5c45);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 10px 24px rgba(223, 78, 65, 0.35);
+}
+
+.book-gig-btn:hover:not(:disabled) {
+  color: #fff;
+  transform: translateY(-1px);
+  filter: saturate(1.08);
+}
+
+.book-gig-btn:disabled {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .wam-triangle-image {
+    width: clamp(120px, 34vw, 190px);
+  }
+
+  .wam-triangle-image-row .wam-triangle-image-link:nth-child(2) .wam-triangle-image {
+    width: clamp(80px, 22vw, 120px);
+  }
+}
+
