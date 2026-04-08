@@ -13,13 +13,16 @@ export default defineConfig({
     },
   },
   server: {
+    allowedHosts: [
+      'staging1.testlinksdesign.com',
+    ],
     port: 5173,
     fs: {
       allow: [path.resolve(__dirname, '..')],
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'https://staging1-backend.testlinksdesign.com',
         changeOrigin: true,
       },
     },

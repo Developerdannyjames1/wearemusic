@@ -5,3 +5,5 @@ dist/
 *.log
 apps/web/dist/
 apps/api/.env
+server/package-lock.json
+server/prisma/dev.db
