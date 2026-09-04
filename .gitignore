@@ -1,9 +1,15 @@
 node_modules/
+**/node_modules/
 dist/
+**/dist/
 .env
+**/.env
 .DS_Store
 *.log
+*.zip
 apps/web/dist/
 apps/api/.env
-server/package-lock.json
-server/prisma/dev.db
+server/prisma/*.db
+server/prisma/*.db-journal
+web/dist/
+.vite/

@@ -4,17 +4,20 @@ const DBAS = [
   {
     to: '/jm-method',
     title: 'JM Method',
-    image: '/triangles/triangle-headphone.png',
+    // Keyboard / piano motif for lessons (was headphones)
+    image: '/triangles/triangle-piano.png',
   },
   {
     to: '/alms-entertainment',
     title: 'ALMS Entertainment',
-    image: '/triangles/triangle-piano.png',
+    // Mic for live performance (flipped off Monkey)
+    image: '/triangles/triangle-mic.png',
   },
   {
     to: '/100th-monkey-studios',
     title: '100th Monkey Studios',
-    image: '/triangles/triangle-mic.png',
+    // Headphones for studio listening (flipped onto Monkey)
+    image: '/triangles/triangle-headphone.png',
   },
 ];
 

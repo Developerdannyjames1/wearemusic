@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, useReducedMotion } from 'framer-motion';
@@ -11,11 +12,6 @@ import heroTriangle from '@home/hero-triangle.png?url';
 gsap.registerPlugin(ScrollTrigger);
 
 const HERO_IMG = heroTriangle;
-const MID_IMG = '/assets/Property_1_Default__7_-43829437-759b-46c0-b4bd-6bc8841c2771.png';
-const REMOTE_1 =
-  'https://wearemusic.testlinkhub.com/wp-content/uploads/2025/07/image-42.png';
-const REMOTE_3 =
-  'https://wearemusic.testlinkhub.com/wp-content/uploads/2025/07/image-40.png';
 
 export function HomePage() {
   const reduceMotion = useReducedMotion();
@@ -354,41 +350,50 @@ export function HomePage() {
             className="position-relative z-1 rounded-3 d-flex flex-column align-items-center"
             style={{ width: '38%', minWidth: 280, height: '75vh', marginTop: '-2rem' }}
           >
+            {/* JM — starts center; keyboard triangle */}
             <div
               ref={box1}
-              className="position-absolute"
+              className="position-absolute home-scroll-logo"
               style={{ width: 'min(440px, 90vw)', top: '0%', left: '50%' }}
             >
-              <img
-                src={REMOTE_1}
-                alt=""
-                className="img-fluid rounded"
-                style={{ filter: 'brightness(1.3) contrast(1.4)' }}
-              />
+              <Link to="/jm-method" className="home-scroll-logo-link text-decoration-none">
+                <img
+                  src="/triangles/triangle-piano.png"
+                  alt="JM Method"
+                  className="img-fluid"
+                />
+                <span className="home-scroll-logo-title">JM Method</span>
+              </Link>
             </div>
+            {/* Monkey — starts left; headphones */}
             <div
               ref={box2}
-              className="position-absolute"
+              className="position-absolute home-scroll-logo"
               style={{ width: 'min(440px, 90vw)', top: '50%', left: '0%' }}
             >
-              <img
-                src={MID_IMG}
-                alt=""
-                className="img-fluid rounded"
-                style={{ filter: 'brightness(1.3) contrast(1.4)' }}
-              />
+              <Link to="/100th-monkey-studios" className="home-scroll-logo-link text-decoration-none">
+                <img
+                  src="/triangles/triangle-headphone.png"
+                  alt="100th Monkey Studios"
+                  className="img-fluid"
+                />
+                <span className="home-scroll-logo-title">100th Monkey Studios</span>
+              </Link>
             </div>
+            {/* ALMS — starts right; mic */}
             <div
               ref={box3}
-              className="position-absolute"
+              className="position-absolute home-scroll-logo"
               style={{ width: 'min(440px, 90vw)', top: '50%', left: '100%' }}
             >
-              <img
-                src={REMOTE_3}
-                alt=""
-                className="img-fluid rounded"
-                style={{ filter: 'brightness(1.3) contrast(1.4)' }}
-              />
+              <Link to="/alms-entertainment" className="home-scroll-logo-link text-decoration-none">
+                <img
+                  src="/triangles/triangle-mic.png"
+                  alt="ALMS Entertainment"
+                  className="img-fluid"
+                />
+                <span className="home-scroll-logo-title">ALMS Entertainment</span>
+              </Link>
             </div>
           </div>
         </div>
