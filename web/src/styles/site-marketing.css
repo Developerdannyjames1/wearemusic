@@ -1,16 +1,20 @@
-/* Warm rustic marketing layer (Abel / Pacifico / Raleway in index.html) */
+/* Warm sunrise / sunset marketing layer */
 :root {
-  --wam-rust: #8b4513;
-  --wam-terracotta: #c65d3b;
-  --wam-cream: #f4e8d8;
-  --wam-bark: #3d2914;
+  --wam-rust: #c2410c;
+  --wam-terracotta: #ea580c;
+  --wam-cream: #fff7ed;
+  --wam-bark: #431407;
   --wam-sage: #6b7f5a;
 }
 
 .site-nav {
-  background: linear-gradient(180deg, rgba(61, 41, 20, 0.92), rgba(20, 12, 8, 0.88));
+  background: linear-gradient(
+    180deg,
+    rgba(30, 27, 75, 0.88),
+    rgba(15, 23, 42, 0.82)
+  );
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+  border-bottom: 1px solid rgba(240, 180, 41, 0.28);
   padding-top: 0.35rem;
   padding-bottom: 0.35rem;
 }
@@ -26,7 +30,7 @@
   font-weight: 600;
   font-size: 0.9rem;
   letter-spacing: 0.04em;
-  color: rgba(244, 232, 216, 0.88) !important;
+  color: rgba(255, 247, 237, 0.9) !important;
   padding: 0.5rem 0.65rem !important;
   border-radius: 8px;
   transition:
@@ -37,22 +41,22 @@
 .site-nav .nav-link:hover,
 .site-nav .nav-link:focus {
   color: #fff !important;
-  background: rgba(222, 37, 116, 0.15);
+  background: rgba(249, 115, 22, 0.22);
 }
 
 .site-nav .btn-book {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.85rem;
-  border: 1px solid rgba(201, 162, 39, 0.45);
-  color: var(--wam-cream);
-  background: rgba(139, 69, 19, 0.35);
+  border: 1px solid rgba(240, 180, 41, 0.55);
+  color: #1c1917;
+  background: linear-gradient(90deg, #fbbf24, #f97316);
 }
 
 .site-nav .btn-book:hover {
-  background: rgba(222, 37, 116, 0.35);
-  border-color: rgba(222, 37, 116, 0.55);
-  color: #fff;
+  background: linear-gradient(90deg, #fcd34d, #fb923c);
+  border-color: #fde68a;
+  color: #1c1917;
 }
 
 .site-nav .btn-signin {
@@ -63,6 +67,244 @@
 
 .marketing-main {
   padding-top: 4.75rem;
+}
+
+/* ——— Landing page (hero + divisions only) ——— */
+.home-landing {
+  background: #0b1224;
+}
+
+.home-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 5.5rem 1.25rem 3rem;
+}
+
+.home-hero-sunrise {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(251, 191, 36, 0.35), transparent 48%),
+    radial-gradient(ellipse at 78% 62%, rgba(125, 211, 252, 0.18), transparent 42%),
+    radial-gradient(ellipse at 18% 72%, rgba(249, 115, 22, 0.22), transparent 45%),
+    linear-gradient(180deg, rgba(30, 27, 75, 0.35), rgba(11, 18, 36, 0.55));
+}
+
+.home-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 3vh, 2rem);
+  width: min(960px, 100%);
+  text-align: center;
+}
+
+.home-hero-mark-wrap {
+  width: min(92vw, 820px);
+  line-height: 0;
+}
+
+.home-hero-mark,
+.hero-brand-mark {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* Crisp vector — no upscaled grain */
+  shape-rendering: geometricPrecision;
+}
+
+.home-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: 36rem;
+  padding: 0 0.5rem;
+}
+
+.home-hero-domain {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-weight: 600;
+  font-size: clamp(1.85rem, 5.5vw, 3.15rem);
+  letter-spacing: 0.04em;
+  color: #fff8e7;
+  text-shadow: 0 2px 24px rgba(251, 191, 36, 0.35);
+}
+
+.home-hero-slogan {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 2.4vw, 1.35rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7dd3fc;
+}
+
+.home-hero-pillars {
+  margin: 0.35rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35rem 0.55rem;
+  font-family: var(--font-brand);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.15rem, 2.8vw, 1.65rem);
+  color: #fde68a;
+  letter-spacing: 0.06em;
+}
+
+.home-hero-dot {
+  color: #fb923c;
+  font-style: normal;
+  margin-left: -0.15rem;
+}
+
+.home-divisions {
+  position: relative;
+  overflow: visible;
+  padding: 4.5rem 0 5.5rem;
+  border-top: 1px solid rgba(240, 180, 41, 0.18);
+}
+
+.home-divisions .position-absolute,
+.home-divisions video {
+  pointer-events: none;
+}
+
+.home-divisions-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(249, 115, 22, 0.2), transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(67, 56, 202, 0.28), transparent 45%),
+    linear-gradient(180deg, rgba(11, 18, 36, 0.55), rgba(15, 23, 42, 0.72));
+}
+
+.home-divisions-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.home-divisions-kicker {
+  color: #fde68a;
+}
+
+/* Division circle — hover must NEVER blank the graphic */
+.home-circle-wrap {
+  position: relative;
+  overflow: visible;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem 4rem;
+  border-top: 1px solid rgba(240, 180, 41, 0.16);
+}
+
+.home-circle-wrap video,
+.home-circle-wrap .home-divisions-veil {
+  pointer-events: none;
+}
+
+.home-circle-inner {
+  position: relative;
+  z-index: 1;
+  width: min(720px, 94vw);
+}
+
+.home-circle-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.home-circle-holder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1252 / 1229;
+  outline: none;
+  cursor: default;
+}
+
+.home-circle-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.35s ease;
+}
+
+.home-circle-img--base {
+  z-index: 1;
+  opacity: 1;
+}
+
+.home-circle-img--hover {
+  z-index: 2;
+  opacity: 0;
+}
+
+/* Keep base visible underneath — only fade the exploded layer in */
+.home-circle-holder:hover .home-circle-img--base,
+.home-circle-holder:focus-visible .home-circle-img--base {
+  opacity: 1;
+}
+
+.home-circle-holder:hover .home-circle-img--hover,
+.home-circle-holder:focus-visible .home-circle-img--hover {
+  opacity: 1;
+}
+
+.home-circle-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem 1rem;
+}
+
+.home-circle-link {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff7ed;
+  border: 1px solid rgba(240, 180, 41, 0.4);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  background: rgba(30, 27, 75, 0.45);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.home-circle-link:hover,
+.home-circle-link:focus-visible {
+  color: #1c1917;
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+  border-color: #fde68a;
+  opacity: 1;
 }
 
 .marketing-hero {
@@ -107,20 +349,35 @@
   align-items: center;
   gap: 0.6rem;
   line-height: 1;
-  transition:
-    transform 0.2s ease,
-    filter 0.2s ease;
-  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.55));
+  opacity: 1;
+  visibility: visible;
+  transition: transform 0.2s ease;
+  /* Avoid filter-on-hover — can make the logo vanish in Chrome/Safari */
+  filter: none;
+  box-shadow: none;
 }
 
-.wam-triangle-image-link:hover {
-  transform: translateY(-4px) scale(1.025);
-  filter: drop-shadow(0 16px 36px rgba(222, 37, 116, 0.25));
+.wam-triangle-image-link:hover,
+.wam-triangle-image-link:focus-visible {
+  transform: translateY(-4px);
+  opacity: 1;
+  visibility: visible;
+  filter: none;
+  color: inherit;
+}
+
+.wam-triangle-image-link:hover .wam-triangle-image,
+.wam-triangle-image-link:focus-visible .wam-triangle-image {
+  opacity: 1;
+  transform: scale(1.03);
 }
 
 .wam-triangle-image {
   width: clamp(160px, 24vw, 300px);
   height: auto;
+  opacity: 1;
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45));
 }
 
 .wam-triangle-image-row .wam-triangle-image-link:nth-child(2) .wam-triangle-image {

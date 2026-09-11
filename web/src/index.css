@@ -1,14 +1,19 @@
 :root {
-  --wam-bg: #000000;
-  --wam-gold: #c9a227;
-  --wam-purple-deep: #1a0130;
-  --wam-purple-mid: #3b024f;
-  --wam-magenta: #de2574;
-  --wam-text: #ffffff;
-  --wam-muted: #9ca3af;
+  --wam-bg: #0b1224;
+  --wam-gold: #f0b429;
+  --wam-orange: #f97316;
+  --wam-sky: #7dd3fc;
+  --wam-indigo: #4338ca;
+  --wam-indigo-deep: #1e1b4b;
+  --wam-purple-deep: #1e1b4b;
+  --wam-purple-mid: #4338ca;
+  --wam-magenta: #fb7185;
+  --wam-text: #fff8f0;
+  --wam-muted: #c4b5a0;
   --font-display: 'Raleway', system-ui, sans-serif;
   --font-body: 'Abel', system-ui, sans-serif;
   --font-accent: 'Pacifico', cursive;
+  --font-brand: 'Cormorant Garamond', Georgia, serif;
 }
 
 * {
@@ -44,7 +49,14 @@ a {
 }
 
 a:hover {
-  color: var(--wam-magenta);
+  color: var(--wam-orange);
+}
+
+/* Keep marketing logo links fully visible on hover */
+a.wam-triangle-image-link:hover,
+a.wam-triangle-image-link:focus {
+  color: inherit;
+  opacity: 1;
 }
 
 .wam-gradient-text {
@@ -56,7 +68,7 @@ a:hover {
 
 .wam-stroke-title {
   color: transparent;
-  -webkit-text-stroke: 2px #8f8f8f;
+  -webkit-text-stroke: 2px rgba(253, 230, 138, 0.55);
   letter-spacing: -0.04em;
 }
 

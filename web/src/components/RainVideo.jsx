@@ -5,13 +5,12 @@ export function RainVideo({ className = '' }) {
   return (
     <video
       className={`position-absolute top-0 start-0 w-100 h-100 object-fit-cover ${className}`}
-      style={{ zIndex: 0 }}
+      style={{ zIndex: 0, filter: 'saturate(1.15) brightness(1.05)' }}
       autoPlay
       muted
       loop
       playsInline
       preload="auto"
-      poster="https://via.placeholder.com/1920x1080?text=Loading"
     >
       <source src={VIDEO_SRC} type="video/mp4" />
     </video>
