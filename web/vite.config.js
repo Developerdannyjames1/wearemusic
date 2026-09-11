@@ -14,6 +14,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    allowedHosts: ['staging1.testlinksdesign.com'],
     fs: {
       allow: [path.resolve(__dirname, '..')],
     },
