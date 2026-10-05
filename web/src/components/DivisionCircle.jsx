@@ -1,37 +1,43 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const NORMAL_SRC = '/normal.svg';
-const HOVER_SRC = '/icon3.svg';
+const SEGMENTS = [
+  {
+    key: 'top',
+    to: '/jm-method',
+    title: 'JM Method',
+    src: '/circle-segments/top.svg',
+  },
+  {
+    key: 'right',
+    to: '/100th-monkey-studios',
+    title: '100th Monkey Studios',
+    src: '/circle-segments/right.svg',
+  },
+  {
+    key: 'bottom',
+    to: '/alms-entertainment',
+    title: 'ALMS Entertainment',
+    src: '/circle-segments/bottom.svg',
+  },
+];
 
 /**
- * Assembled circle (normal) → exploded segments (icon3) on hover.
- * Base image stays visible so the graphic never blanks while the hover asset paints.
+ * Three separated division wedges — each scales up on hover with a cream shadow.
  */
 export function DivisionCircle() {
-  useEffect(() => {
-    const a = new Image();
-    const b = new Image();
-    a.src = NORMAL_SRC;
-    b.src = HOVER_SRC;
-  }, []);
-
   return (
     <section className="home-circle-section">
-      <div className="home-circle-holder" tabIndex={0} aria-label="We Are Music divisions">
-        <img
-          className="home-circle-img home-circle-img--base"
-          src={NORMAL_SRC}
-          alt="JM Method, ALMS Entertainment, and 100th Monkey Studios"
-          draggable={false}
-        />
-        <img
-          className="home-circle-img home-circle-img--hover"
-          src={HOVER_SRC}
-          alt=""
-          aria-hidden="true"
-          draggable={false}
-        />
+      <div className="home-circle-holder" aria-label="We Are Music divisions">
+        {SEGMENTS.map((segment) => (
+          <Link
+            key={segment.key}
+            to={segment.to}
+            className={`home-circle-segment home-circle-segment--${segment.key}`}
+            aria-label={segment.title}
+          >
+            <img src={segment.src} alt="" draggable={false} />
+          </Link>
+        ))}
       </div>
 
       <div className="home-circle-links">

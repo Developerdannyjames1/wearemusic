@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Footer } from '../components/Footer.jsx';
 import { ALMSEntertainmentTriangle } from '../components/ALMSEntertainmentTriangle.jsx';
 import { api } from '../api/client.js';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const PACKAGES = [
   {
@@ -47,10 +43,6 @@ export function ALMSEntertainmentPage() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(null);
   const [artists, setArtists] = useState([]);
-
-  const revealRef = useRef(null);
-  const triangleRef = useRef(null);
-  const micGlowRef = useRef(null);
   const detailRef = useRef(null);
 
   useEffect(() => {
@@ -68,32 +60,6 @@ export function ALMSEntertainmentPage() {
     };
   }, []);
 
-  useEffect(() => {
-    if (reduceMotion) return undefined;
-    const ctx = gsap.context(() => {
-      if (!revealRef.current || !triangleRef.current) return;
-
-      gsap.set(triangleRef.current, { scale: 0.72, opacity: 0.35, y: 80 });
-      if (micGlowRef.current) gsap.set(micGlowRef.current, { scale: 1.2, opacity: 1 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: revealRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.1,
-        },
-      });
-
-      tl.to(triangleRef.current, { scale: 1, opacity: 1, y: 0, ease: 'none', duration: 1 }, 0);
-      if (micGlowRef.current) {
-        tl.to(micGlowRef.current, { scale: 1, opacity: 0.9, ease: 'none', duration: 1 }, 0);
-      }
-    }, revealRef);
-
-    return () => ctx.revert();
-  }, [reduceMotion]);
-
   function selectSection(id) {
     setActive(id);
     requestAnimationFrame(() => {
@@ -103,14 +69,26 @@ export function ALMSEntertainmentPage() {
 
   return (
     <div className="alms-page marketing-hero marketing-hero--alms">
-      {/* 1) Booking-first opening */}
-      <section className="alms-hero-booking min-vh-100 d-flex flex-column align-items-center justify-content-center">
+      {/* 1) Opening: ALMS triangle */}
+      <section className="alms-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <p className="marketing-section-title text-center mb-1">ALMS Entertainment</p>
+        <h1 className="alms-hero-title text-center mb-2">Music performances for the New Age</h1>
+        <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
+          Three equal paths — Inspire · Share · Heal. Tap a corner to go deeper.
+        </p>
+        <div className="jm-triangle-stage">
+          <ALMSEntertainmentTriangle active={active} onSelect={selectSection} />
+          <div className="alms-mic-glow" aria-hidden="true" />
+        </div>
+      </section>
+
+      {/* 2) Booking packages */}
+      <section className="alms-hero-booking">
         <div className="container text-center">
-          <p className="marketing-section-title mb-2">ALMS Entertainment</p>
-          <h1 className="alms-hero-title mb-3">Music performances for the New Age</h1>
+          <p className="marketing-section-title mb-2">Book a set</p>
+          <h2 className="alms-hero-title mb-3">Solo, duo &amp; trio engagements</h2>
           <p className="marketing-prose mx-auto mb-4 text-center" style={{ maxWidth: 640 }}>
-            Solo, duo, and trio engagements for cafes, private events, and senior communities — with clear packages
-            and community-healing live music.
+            Cafes, private events, and senior communities — with clear packages and community-healing live music.
           </p>
 
           <div className="d-flex flex-wrap gap-2 justify-content-center mb-5">
@@ -147,24 +125,8 @@ export function ALMSEntertainmentPage() {
               </div>
             ))}
           </div>
-
-          <p className="small text-secondary mt-5 mb-0">Scroll to explore Inspire · Share · Heal</p>
         </div>
       </section>
-
-      {/* 2) Stationary triangle reveal */}
-      <div ref={revealRef} className="jm-triangle-reveal alms-triangle-reveal">
-        <div className="jm-triangle-sticky alms-triangle-sticky min-vh-100 d-flex flex-column align-items-center justify-content-center">
-          <p className="marketing-section-title text-center mb-1">The ALMS triangle</p>
-          <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
-            Three equal paths — Inspire, Share, Heal. Tap a corner to go deeper.
-          </p>
-          <div ref={triangleRef} className="jm-triangle-stage">
-            <ALMSEntertainmentTriangle active={active} onSelect={selectSection} />
-            <div ref={micGlowRef} className="alms-mic-glow" aria-hidden="true" />
-          </div>
-        </div>
-      </div>
 
       {/* 3) Detail panels */}
       <section ref={detailRef} className="jm-detail container pb-5" id="alms-detail">

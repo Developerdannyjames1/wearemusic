@@ -1,14 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Footer } from '../components/Footer.jsx';
 import { DisciplineWheel, DISCIPLINES } from '../components/DisciplineWheel.jsx';
 import { JMMethodTriangle } from '../components/JMMethodTriangle.jsx';
 import { api } from '../api/client.js';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const DISCIPLINE_QUOTES = [
   'Discipline is practicing when inspiration is quiet — then the music answers back.',
@@ -29,9 +25,6 @@ export function JMMethodPage() {
   const [active, setActive] = useState(null);
   const [wheelPaused, setWheelPaused] = useState(false);
 
-  const revealRef = useRef(null);
-  const triangleRef = useRef(null);
-  const keyboardHintRef = useRef(null);
   const detailRef = useRef(null);
 
   const quote = useMemo(() => quoteOfTheDay(), []);
@@ -51,44 +44,6 @@ export function JMMethodPage() {
     };
   }, []);
 
-  // Scroll: large stationary triangle reveals; keyboard stays centered in foreground
-  useEffect(() => {
-    if (reduceMotion) return undefined;
-    const ctx = gsap.context(() => {
-      if (!revealRef.current || !triangleRef.current) return;
-
-      gsap.set(triangleRef.current, { scale: 0.72, opacity: 0.35, y: 80 });
-      if (keyboardHintRef.current) {
-        gsap.set(keyboardHintRef.current, { scale: 1.15, opacity: 1 });
-      }
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: revealRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.1,
-        },
-      });
-
-      tl.to(
-        triangleRef.current,
-        { scale: 1, opacity: 1, y: 0, ease: 'none', duration: 1 },
-        0
-      );
-
-      if (keyboardHintRef.current) {
-        tl.to(
-          keyboardHintRef.current,
-          { scale: 1, opacity: 0.85, ease: 'none', duration: 1 },
-          0
-        );
-      }
-    }, revealRef);
-
-    return () => ctx.revert();
-  }, [reduceMotion]);
-
   function selectSection(id) {
     setActive(id);
     requestAnimationFrame(() => {
@@ -98,13 +53,26 @@ export function JMMethodPage() {
 
   return (
     <div className="jm-page marketing-hero marketing-hero--jm">
-      {/* 1) Opening: instrument wheel first */}
-      <section className="jm-hero-wheel min-vh-100 d-flex flex-column align-items-center justify-content-center">
+      {/* 1) Opening: equal triangle + keyboard */}
+      <section className="jm-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <p className="marketing-section-title text-center mb-1">JM Method</p>
+        <h1 className="jm-hero-title text-center mb-2">Music lessons for the New Age</h1>
+        <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
+          Three equal paths — Discipline · Creativity · Harmony. Tap a corner to go deeper.
+        </p>
+        <div className="jm-triangle-stage">
+          <JMMethodTriangle active={active} onSelect={selectSection} />
+          <div className="jm-keyboard-glow" aria-hidden="true" />
+        </div>
+      </section>
+
+      {/* 2) Instrument wheel */}
+      <section className="jm-hero-wheel">
         <div className="container text-center">
-          <p className="marketing-section-title mb-2">JM Method</p>
-          <h1 className="jm-hero-title mb-2">Music lessons for the New Age</h1>
-          <p className="marketing-prose mx-auto mb-4 text-center" style={{ maxWidth: 560 }}>
-            Begin with the dial — seven disciplines in one circle. Pause anytime for a stationary view.
+          <p className="marketing-section-title mb-2">The dial</p>
+          <h2 className="jm-hero-title mb-2">Seven disciplines, one circle</h2>
+          <p className="marketing-prose mx-auto mb-3 text-center" style={{ maxWidth: 560 }}>
+            Pause anytime for a stationary view — then explore the path that fits you.
           </p>
           <DisciplineWheel
             paused={wheelPaused}
@@ -112,23 +80,8 @@ export function JMMethodPage() {
             autoRotateOnce={!reduceMotion}
             showControls
           />
-          <p className="small text-secondary mt-2 mb-0">Scroll to meet Discipline · Creativity · Harmony</p>
         </div>
       </section>
-
-      {/* 2) Scroll reveal: stationary equal triangle + keyboard foreground */}
-      <div ref={revealRef} className="jm-triangle-reveal">
-        <div className="jm-triangle-sticky min-vh-100 d-flex flex-column align-items-center justify-content-center">
-          <p className="marketing-section-title text-center mb-1">The JM Method triangle</p>
-          <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
-            Three equal paths — none larger than another. Tap a corner to go deeper.
-          </p>
-          <div ref={triangleRef} className="jm-triangle-stage">
-            <JMMethodTriangle active={active} onSelect={selectSection} />
-            <div ref={keyboardHintRef} className="jm-keyboard-glow" aria-hidden="true" />
-          </div>
-        </div>
-      </div>
 
       {/* 3) Detail panels from triangle clicks */}
       <section ref={detailRef} className="jm-detail container pb-5" id="jm-detail">

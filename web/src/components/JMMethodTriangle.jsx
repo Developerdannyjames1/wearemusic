@@ -47,17 +47,17 @@ export function JMMethodTriangle({ active, onSelect, className = '' }) {
       >
         <defs>
           <linearGradient id="jm-tri-fill" x1="50%" y1="0%" x2="50%" y2="100%">
-            <stop offset="0%" stopColor="#5a1878" />
-            <stop offset="55%" stopColor="#2a0a48" />
-            <stop offset="100%" stopColor="#1a0530" />
+            <stop offset="0%" stopColor="#7a2a9e" />
+            <stop offset="45%" stopColor="#3d1058" />
+            <stop offset="100%" stopColor="#220838" />
           </linearGradient>
           <linearGradient id="jm-tri-stroke" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#e8c96a" />
-            <stop offset="50%" stopColor="#c9a227" />
-            <stop offset="100%" stopColor="#8b6914" />
+            <stop offset="0%" stopColor="#f0d78a" />
+            <stop offset="50%" stopColor="#d4ae35" />
+            <stop offset="100%" stopColor="#a07a1c" />
           </linearGradient>
-          <filter id="jm-tri-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="#c9a227" floodOpacity="0.35" />
+          <filter id="jm-tri-glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="0" stdDeviation="10" floodColor="#c9a227" floodOpacity="0.55" />
           </filter>
         </defs>
 
@@ -65,7 +65,7 @@ export function JMMethodTriangle({ active, onSelect, className = '' }) {
           points={`${A.join(',')} ${B.join(',')} ${C.join(',')}`}
           fill="url(#jm-tri-fill)"
           stroke="url(#jm-tri-stroke)"
-          strokeWidth="10"
+          strokeWidth="12"
           strokeLinejoin="round"
           filter="url(#jm-tri-glow)"
         />
@@ -77,9 +77,9 @@ export function JMMethodTriangle({ active, onSelect, className = '' }) {
               <path
                 d={s.path}
                 className={`jm-triangle-region ${isActive ? 'is-active' : ''}`}
-                fill={isActive ? 'rgba(201, 162, 39, 0.28)' : 'rgba(255,255,255,0.03)'}
-                stroke="rgba(201, 162, 39, 0.32)"
-                strokeWidth="1.25"
+                fill={isActive ? 'rgba(201, 162, 39, 0.32)' : 'rgba(255,255,255,0.07)'}
+                stroke="rgba(232, 213, 163, 0.45)"
+                strokeWidth="1.5"
                 role="button"
                 tabIndex={0}
                 aria-label={`Open ${s.label}`}

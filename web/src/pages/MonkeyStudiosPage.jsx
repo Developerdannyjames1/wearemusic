@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Footer } from '../components/Footer.jsx';
 import { MonkeyStudiosTriangle } from '../components/MonkeyStudiosTriangle.jsx';
 import { api } from '../api/client.js';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const OFFERINGS = [
   {
@@ -29,10 +25,6 @@ export function MonkeyStudiosPage() {
   const [media, setMedia] = useState([]);
   const [err, setErr] = useState(null);
   const [active, setActive] = useState(null);
-
-  const revealRef = useRef(null);
-  const triangleRef = useRef(null);
-  const glowRef = useRef(null);
   const detailRef = useRef(null);
 
   useEffect(() => {
@@ -52,32 +44,6 @@ export function MonkeyStudiosPage() {
     };
   }, []);
 
-  useEffect(() => {
-    if (reduceMotion) return undefined;
-    const ctx = gsap.context(() => {
-      if (!revealRef.current || !triangleRef.current) return;
-
-      gsap.set(triangleRef.current, { scale: 0.72, opacity: 0.4, y: 80 });
-      if (glowRef.current) gsap.set(glowRef.current, { scale: 1.15, opacity: 1 });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: revealRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.1,
-        },
-      });
-
-      tl.to(triangleRef.current, { scale: 1, opacity: 1, y: 0, ease: 'none', duration: 1 }, 0);
-      if (glowRef.current) {
-        tl.to(glowRef.current, { scale: 1, opacity: 0.9, ease: 'none', duration: 1 }, 0);
-      }
-    }, revealRef);
-
-    return () => ctx.revert();
-  }, [reduceMotion]);
-
   function selectSection(id) {
     setActive(id);
     requestAnimationFrame(() => {
@@ -89,14 +55,27 @@ export function MonkeyStudiosPage() {
 
   return (
     <div className="monkey-page marketing-hero marketing-hero--monkey">
-      {/* 1) Opening — catalog / listen CTA */}
-      <section className="monkey-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
+      {/* 1) Opening — triangle */}
+      <section className="monkey-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
+        <p className="marketing-section-title text-center mb-1">100th Monkey Studios</p>
+        <h1 className="monkey-hero-title text-center mb-2">Music productions for the New Age</h1>
+        <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
+          Three equal paths — Listen · Produce · Release. Headphones lead; the mic stays secondary.
+        </p>
+        <div className="jm-triangle-stage">
+          <MonkeyStudiosTriangle active={active} onSelect={selectSection} />
+          <div className="monkey-head-glow" aria-hidden="true" />
+        </div>
+      </section>
+
+      {/* 2) Catalog / listen CTA */}
+      <section className="monkey-hero">
         <div className="container text-center">
-          <p className="marketing-section-title mb-2">100th Monkey Studios</p>
-          <h1 className="monkey-hero-title mb-3">Music productions for the New Age</h1>
+          <p className="marketing-section-title mb-2">The catalog</p>
+          <h2 className="monkey-hero-title mb-3">Stream, download &amp; learn</h2>
           <p className="marketing-prose mx-auto mb-4 text-center" style={{ maxWidth: 620 }}>
-            A New Age music studio — stream and download songs, albums, masterclasses, and modules from emerging
-            local artists. Premium access stays tied to your account.
+            Songs, albums, masterclasses, and modules from emerging local artists. Premium access stays tied to your
+            account.
           </p>
 
           <div className="d-flex flex-wrap gap-2 justify-content-center mb-5">
@@ -118,24 +97,8 @@ export function MonkeyStudiosPage() {
               </div>
             ))}
           </div>
-
-          <p className="small text-secondary mt-4 mb-0">Scroll to explore Listen · Produce · Release</p>
         </div>
       </section>
-
-      {/* 2) Stationary triangle — headphones center, mic dimmed (flipped) */}
-      <div ref={revealRef} className="jm-triangle-reveal">
-        <div className="jm-triangle-sticky monkey-triangle-sticky min-vh-100 d-flex flex-column align-items-center justify-content-center">
-          <p className="marketing-section-title text-center mb-1">The Monkey Studios triangle</p>
-          <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
-            Three equal paths — Listen, Produce, Release. Headphones lead; the mic stays secondary.
-          </p>
-          <div ref={triangleRef} className="jm-triangle-stage">
-            <MonkeyStudiosTriangle active={active} onSelect={selectSection} />
-            <div ref={glowRef} className="monkey-head-glow" aria-hidden="true" />
-          </div>
-        </div>
-      </div>
 
       {/* 3) Detail panels */}
       <section ref={detailRef} className="jm-detail container pb-5" id="monkey-detail">
