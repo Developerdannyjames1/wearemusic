@@ -57,8 +57,8 @@ export function MonkeyStudiosPage() {
     <div className="monkey-page marketing-hero marketing-hero--monkey">
       {/* 1) Opening — triangle */}
       <section className="monkey-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
-        <p className="marketing-section-title text-center mb-1">100th Monkey Studios</p>
-        <h1 className="monkey-hero-title text-center mb-2">Music productions for the New Age</h1>
+        <h1 className="jm-hero-brand text-center mb-2">100th Monkey Studios</h1>
+        <p className="jm-hero-tagline text-center mb-2">Music productions for the New Age</p>
         <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
           Three equal paths — Listen · Produce · Release. Headphones lead; the mic stays secondary.
         </p>

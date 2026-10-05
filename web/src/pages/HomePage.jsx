@@ -43,10 +43,7 @@ export function HomePage() {
       <section className="home-divisions">
         <RainVideo />
         <div className="home-divisions-veil" aria-hidden="true" />
-        <div className="container home-divisions-inner">
-          <p className="marketing-section-title text-center home-divisions-kicker">
-            Three ways we serve music
-          </p>
+        <div className="home-divisions-inner">
           <TriangleDBAPicker />
         </div>
       </section>

@@ -71,8 +71,8 @@ export function ALMSEntertainmentPage() {
     <div className="alms-page marketing-hero marketing-hero--alms">
       {/* 1) Opening: ALMS triangle */}
       <section className="alms-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
-        <p className="marketing-section-title text-center mb-1">ALMS Entertainment</p>
-        <h1 className="alms-hero-title text-center mb-2">Music performances for the New Age</h1>
+        <h1 className="jm-hero-brand text-center mb-2">ALMS Entertainment</h1>
+        <p className="jm-hero-tagline text-center mb-2">Music performances for the New Age</p>
         <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
           Three equal paths — Inspire · Share · Heal. Tap a corner to go deeper.
         </p>

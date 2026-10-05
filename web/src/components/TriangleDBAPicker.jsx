@@ -19,8 +19,6 @@ const DBAS = [
   },
 ];
 
-const INTERVAL_MS = 4200;
-
 function wrapIndex(n) {
   return ((n % DBAS.length) + DBAS.length) % DBAS.length;
 }
@@ -33,22 +31,22 @@ function coverOffset(index, active) {
   return diff;
 }
 
+function prefersReducedMotion() {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
 /**
  * Three face-forward triangles: center is larger.
- * Moves automatically and by click / drag / arrows.
+ * Rotates as you scroll through the section; also click / drag / arrows.
  */
 export function TriangleDBAPicker() {
-  const [active, setActive] = useState(1);
-  const activeRef = useRef(1);
-  const paused = useRef(false);
-  const hoverPaused = useRef(false);
-  const focusPaused = useRef(false);
+  const [active, setActive] = useState(0);
+  const [scrollDriven] = useState(() => !prefersReducedMotion());
+  const activeRef = useRef(0);
+  const trackRef = useRef(null);
   const drag = useRef({ x: 0, pointerId: null, moved: false });
   const suppressClick = useRef(false);
-
-  const syncPause = useCallback(() => {
-    paused.current = hoverPaused.current || focusPaused.current;
-  }, []);
+  const manualUntil = useRef(0);
 
   const goTo = useCallback((next) => {
     const normalized = wrapIndex(next);
@@ -56,18 +54,51 @@ export function TriangleDBAPicker() {
     setActive(normalized);
   }, []);
 
-  const step = useCallback((dir) => {
-    goTo(activeRef.current + dir);
-  }, [goTo]);
+  const step = useCallback(
+    (dir) => {
+      manualUntil.current = Date.now() + 900;
+      goTo(activeRef.current + dir);
+    },
+    [goTo]
+  );
 
   useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (media.matches) return undefined;
-    const id = window.setInterval(() => {
-      if (!paused.current) step(1);
-    }, INTERVAL_MS);
-    return () => window.clearInterval(id);
-  }, [step, active]);
+    if (!scrollDriven) return undefined;
+
+    const track = trackRef.current;
+    if (!track) return undefined;
+
+    let ticking = false;
+
+    function syncFromScroll() {
+      ticking = false;
+      if (Date.now() < manualUntil.current) return;
+
+      const rect = track.getBoundingClientRect();
+      const travel = Math.max(track.offsetHeight - window.innerHeight, 1);
+      const scrolled = Math.min(Math.max(-rect.top, 0), travel);
+      const progress = scrolled / travel;
+
+      // One full rotation through all three as the section is scrolled
+      const idx = Math.min(DBAS.length - 1, Math.floor(progress * DBAS.length));
+      if (idx !== activeRef.current) goTo(idx);
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(syncFromScroll);
+      }
+    }
+
+    syncFromScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [goTo, scrollDriven]);
 
   function onPointerDown(event) {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
@@ -109,7 +140,7 @@ export function TriangleDBAPicker() {
     }
   }
 
-  return (
+  const coverflow = (
     <div
       className="wam-coverflow"
       role="region"
@@ -120,24 +151,6 @@ export function TriangleDBAPicker() {
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
-      onMouseEnter={() => {
-        hoverPaused.current = true;
-        syncPause();
-      }}
-      onMouseLeave={() => {
-        hoverPaused.current = false;
-        syncPause();
-      }}
-      onFocus={() => {
-        focusPaused.current = true;
-        syncPause();
-      }}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) {
-          focusPaused.current = false;
-          syncPause();
-        }
-      }}
     >
       <div className="wam-coverflow-stage">
         {DBAS.map((dba, index) => {
@@ -160,6 +173,7 @@ export function TriangleDBAPicker() {
                 }
                 if (!isCenter) {
                   event.preventDefault();
+                  manualUntil.current = Date.now() + 900;
                   goTo(index);
                 }
               }}
@@ -193,9 +207,26 @@ export function TriangleDBAPicker() {
             aria-label={dba.title}
             aria-selected={index === active}
             className={index === active ? 'is-active' : undefined}
-            onClick={() => goTo(index)}
+            onClick={() => {
+              manualUntil.current = Date.now() + 900;
+              goTo(index);
+            }}
           />
         ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div
+      ref={trackRef}
+      className={`wam-coverflow-track${scrollDriven ? ' is-scroll-driven' : ''}`}
+    >
+      <div className="wam-coverflow-sticky container">
+        <p className="marketing-section-title text-center home-divisions-kicker">
+          Three ways we serve music
+        </p>
+        {coverflow}
       </div>
     </div>
   );

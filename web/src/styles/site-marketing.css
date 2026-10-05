@@ -5,6 +5,10 @@
   --wam-cream: #fff7ed;
   --wam-bark: #431407;
   --wam-sage: #6b7f5a;
+  --wam-gold: #f0b429;
+  --wam-orange: #f97316;
+  --wam-indigo: #4338ca;
+  --wam-indigo-deep: #1e1b4b;
 }
 
 .site-nav {
@@ -119,15 +123,40 @@
   display: block;
   /* Crisp vector — no upscaled grain */
   shape-rendering: geometricPrecision;
+  overflow: visible;
 }
 
 .hero-brand-icon {
   cursor: pointer;
 }
 
+.hero-brand-icon-hit {
+  pointer-events: all;
+}
+
+.hero-brand-icon-label {
+  fill: #fff8e7;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  paint-order: stroke fill;
+  stroke: rgba(10, 6, 4, 0.72);
+  stroke-width: 3.5px;
+}
+
+.hero-brand-icon:hover .hero-brand-icon-label,
+.hero-brand-icon:focus-visible .hero-brand-icon-label {
+  opacity: 1;
+}
+
 .hero-brand-icon:hover,
 .hero-brand-icon:focus-visible {
-  filter: brightness(1.18);
+  filter: brightness(1.12);
 }
 
 .hero-brand-icon:focus-visible {
@@ -187,7 +216,7 @@
 .home-divisions {
   position: relative;
   overflow: visible;
-  padding: 4.5rem 0 5.5rem;
+  padding: 0;
   border-top: 1px solid rgba(240, 180, 41, 0.18);
 }
 
@@ -214,6 +243,31 @@
 
 .home-divisions-kicker {
   color: #fde68a;
+  margin-bottom: 0.75rem;
+}
+
+.wam-coverflow-track {
+  position: relative;
+}
+
+.wam-coverflow-track.is-scroll-driven {
+  height: 240vh;
+}
+
+.wam-coverflow-sticky {
+  position: relative;
+  padding: 4.5rem 1.25rem 5rem;
+}
+
+.wam-coverflow-track.is-scroll-driven .wam-coverflow-sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 /* Division circle — hover must NEVER blank the graphic */
@@ -247,9 +301,16 @@
   gap: 1.5rem;
 }
 
+.home-circle-clip-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .home-circle-holder {
   position: relative;
-  width: 100%;
+  width: min(100%, 560px);
   aspect-ratio: 1252 / 1229;
   outline: none;
 }
@@ -266,6 +327,7 @@
     filter 0.35s ease;
   filter: drop-shadow(0 10px 18px rgba(255, 247, 237, 0.28));
   will-change: transform;
+  /* clip-path (inline) limits hit-testing to the wedge only */
 }
 
 .home-circle-segment img {
@@ -275,6 +337,39 @@
   display: block;
   pointer-events: none;
   user-select: none;
+}
+
+.home-circle-segment-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(0.7rem, 2vw, 0.85rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff8e7;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.home-circle-segment--top .home-circle-segment-label {
+  left: 38%;
+  top: 34%;
+}
+
+.home-circle-segment--right .home-circle-segment-label {
+  left: 72%;
+  top: 48%;
+}
+
+.home-circle-segment--bottom .home-circle-segment-label {
+  left: 48%;
+  top: 78%;
 }
 
 /* Pull the three wedges apart from the center */
@@ -298,6 +393,11 @@
   z-index: 4;
   filter: drop-shadow(0 14px 28px rgba(255, 247, 237, 0.55))
     drop-shadow(0 0 18px rgba(253, 230, 138, 0.45));
+}
+
+.home-circle-segment:hover .home-circle-segment-label,
+.home-circle-segment:focus-visible .home-circle-segment-label {
+  opacity: 1;
 }
 
 .home-circle-segment--top:hover,
@@ -995,6 +1095,28 @@
   font-weight: 700;
   font-size: clamp(1.75rem, 5vw, 2.75rem);
   color: #fff;
+}
+
+.jm-hero-brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 6.2vw, 3.5rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.1;
+  margin: 0;
+  max-width: 18ch;
+  margin-inline: auto;
+}
+
+.jm-hero-tagline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 2.4vw, 1.35rem);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
 }
 
 .jm-triangle-hero {

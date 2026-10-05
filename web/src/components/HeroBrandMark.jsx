@@ -12,32 +12,38 @@ const DIVISION_ICONS = [
     to: '/100th-monkey-studios',
     title: '100th Monkey Studios',
     href: '/triangles/icons/headphones.png',
-    x: 176,
-    y: 72,
-    width: 48,
-    height: 50,
+    x: 178,
+    y: 92,
+    width: 44,
+    height: 46,
+    labelX: 200,
+    labelY: 152,
   },
   {
     to: '/alms-entertainment',
     title: 'ALMS Entertainment',
     href: '/triangles/icons/mic.png',
-    x: 70,
-    y: 262,
+    x: 74,
+    y: 258,
     width: 34,
     height: 56,
+    labelX: 118,
+    labelY: 250,
   },
   {
     to: '/jm-method',
     title: 'JM Method',
     href: '/triangles/icons/piano.png',
     x: 282,
-    y: 274,
+    y: 270,
     width: 50,
     height: 40,
+    labelX: 282,
+    labelY: 262,
   },
 ];
 
-function DivisionIcon({ to, title, href, x, y, width, height }) {
+function DivisionIcon({ to, title, href, x, y, width, height, labelX, labelY }) {
   const navigate = useNavigate();
 
   function open() {
@@ -58,7 +64,15 @@ function DivisionIcon({ to, title, href, x, y, width, height }) {
         }
       }}
     >
-      <rect x={x} y={y} width={width} height={height} fill="rgba(0,0,0,0)" />
+      {/* Larger hit area for hover / click */}
+      <rect
+        className="hero-brand-icon-hit"
+        x={x - 10}
+        y={Math.min(y, labelY) - 14}
+        width={width + 20}
+        height={Math.abs(labelY - y) + height + 22}
+        fill="transparent"
+      />
       <image
         href={href}
         x={x}
@@ -67,8 +81,16 @@ function DivisionIcon({ to, title, href, x, y, width, height }) {
         height={height}
         preserveAspectRatio="xMidYMid meet"
         filter="url(#hero-icon-look)"
-        clipPath="url(#hero-icon-clip)"
       />
+      <text
+        className="hero-brand-icon-label"
+        x={labelX}
+        y={labelY}
+        textAnchor="middle"
+        dominantBaseline="middle"
+      >
+        {title}
+      </text>
     </g>
   );
 }
@@ -81,33 +103,34 @@ export function HeroBrandMark({ className = '' }) {
       role="group"
       aria-label="We Are Music"
       xmlns="http://www.w3.org/2000/svg"
+      overflow="visible"
     >
       <defs>
         <linearGradient id="hero-sky" x1="50%" y1="0%" x2="50%" y2="70%">
-          <stop offset="0%" stopColor="#1e3a8a" />
-          <stop offset="35%" stopColor="#4c6ef5" />
-          <stop offset="62%" stopColor="#f97316" />
-          <stop offset="100%" stopColor="#fbbf24" />
+          <stop offset="0%" stopColor="var(--wam-indigo-deep)" />
+          <stop offset="28%" stopColor="var(--wam-indigo)" />
+          <stop offset="58%" stopColor="var(--wam-orange)" />
+          <stop offset="100%" stopColor="var(--wam-gold)" />
         </linearGradient>
         <linearGradient id="hero-dunes" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#fde68a" />
-          <stop offset="55%" stopColor="#f59e0b" />
-          <stop offset="100%" stopColor="#b45309" />
+          <stop offset="0%" stopColor="var(--wam-cream)" />
+          <stop offset="45%" stopColor="var(--wam-gold)" />
+          <stop offset="100%" stopColor="var(--wam-rust)" />
         </linearGradient>
         <linearGradient id="hero-border" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#fef3c7" />
-          <stop offset="40%" stopColor="#fbbf24" />
-          <stop offset="100%" stopColor="#d97706" />
+          <stop offset="0%" stopColor="var(--wam-cream)" />
+          <stop offset="45%" stopColor="var(--wam-gold)" />
+          <stop offset="100%" stopColor="var(--wam-rust)" />
         </linearGradient>
         <radialGradient id="hero-burst" cx="50%" cy="42%" r="38%">
-          <stop offset="0%" stopColor="rgba(255, 237, 213, 0.95)" />
-          <stop offset="45%" stopColor="rgba(251, 146, 60, 0.55)" />
-          <stop offset="100%" stopColor="rgba(79, 70, 229, 0)" />
+          <stop offset="0%" stopColor="rgba(255, 248, 240, 0.95)" />
+          <stop offset="40%" stopColor="rgba(249, 115, 22, 0.55)" />
+          <stop offset="100%" stopColor="rgba(30, 27, 75, 0)" />
         </radialGradient>
         <filter id="hero-soft" x="-25%" y="-25%" width="150%" height="150%">
-          <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#f59e0b" floodOpacity="0.4" />
+          <feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#f0b429" floodOpacity="0.42" />
         </filter>
-        {/* Black outline highlight for contrast on the sunrise fill */}
+        {/* Soft cream rim so icons read on the warm fill */}
         <filter id="hero-icon-look" x="-55%" y="-55%" width="210%" height="210%" colorInterpolationFilters="sRGB">
           <feMorphology in="SourceGraphic" operator="dilate" radius="1.5" result="halo" />
           <feColorMatrix
@@ -137,20 +160,16 @@ export function HeroBrandMark({ className = '' }) {
         <clipPath id="hero-fill-clip">
           <polygon points={TRI_POINTS} />
         </clipPath>
-        {/* Keep icons inside the border stroke */}
-        <clipPath id="hero-icon-clip">
-          <polygon points="200,36 362,328 38,328" />
-        </clipPath>
       </defs>
 
-      {/* Ambient glow — soft amber haze behind the mark */}
+      {/* Ambient glow — soft gold haze behind the mark */}
       <polygon
         points={TRI_POINTS}
         fill="none"
-        stroke="#f59e0b"
+        stroke="var(--wam-gold)"
         strokeWidth="22"
         strokeLinejoin="round"
-        opacity="0.22"
+        opacity="0.28"
         filter="url(#hero-soft)"
       />
 
@@ -165,8 +184,8 @@ export function HeroBrandMark({ className = '' }) {
         />
         <path
           d="M10 318 C95 290 140 300 190 308 C240 316 290 292 390 315 L390 360 L10 360 Z"
-          fill="#fcd34d"
-          opacity="0.55"
+          fill="var(--wam-gold)"
+          opacity="0.45"
         />
       </g>
 

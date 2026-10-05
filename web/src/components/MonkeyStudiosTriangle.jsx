@@ -53,14 +53,14 @@ function HeadphonesIcon({ x, y }) {
 
 /**
  * Mic near apex — intentionally secondary / dimmed.
- * Flipped vs older Monkey art that put the mic in the center.
+ * Kept below the tip so the capsule isn't clipped by the border.
  */
 function DimMicIcon() {
   return (
-    <g className="monkey-triangle-mic-dim" transform="translate(186, 48)" opacity="0.32" aria-hidden="true">
-      <rect x="10" y="4" width="12" height="22" rx="6" fill="#c9a227" />
-      <rect x="13" y="26" width="6" height="10" fill="#e8c96a" />
-      <rect x="6" y="34" width="20" height="4" rx="1" fill="#c9a227" />
+    <g className="monkey-triangle-mic-dim" transform="translate(188, 72)" opacity="0.38" aria-hidden="true">
+      <rect x="10" y="2" width="12" height="20" rx="6" fill="#c9a227" />
+      <rect x="13" y="22" width="6" height="9" fill="#e8c96a" />
+      <rect x="6" y="30" width="20" height="4" rx="1" fill="#c9a227" />
     </g>
   );
 }
