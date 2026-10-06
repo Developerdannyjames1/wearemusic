@@ -46,7 +46,7 @@
         values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
         result="hardAlpha"
       />
-      <feOffset dx="-22.3085" dy="2.92932" />
+      <feOffset dx="0" dy="0" />
       <feGaussianBlur stdDeviation="7.81153" />
       <feComposite in2="hardAlpha" operator="out" />
       <feColorMatrix

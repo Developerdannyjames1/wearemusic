@@ -75,29 +75,53 @@
 
 /* ——— Landing page (hero + divisions only) ——— */
 .home-landing {
+  position: relative;
   background: #0b1224;
+}
+
+.home-landing > :not(.home-landing-bg) {
+  position: relative;
+  z-index: 1;
+}
+
+.home-landing > footer {
+  background-color: transparent !important;
+}
+
+.home-landing-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.home-landing-bg video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-landing-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(251, 191, 36, 0.28), transparent 48%),
+    radial-gradient(ellipse at 78% 62%, rgba(125, 211, 252, 0.14), transparent 42%),
+    radial-gradient(ellipse at 18% 72%, rgba(249, 115, 22, 0.18), transparent 45%),
+    linear-gradient(180deg, rgba(30, 27, 75, 0.4), rgba(11, 18, 36, 0.58));
 }
 
 .home-hero {
   position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   padding: 5.5rem 1.25rem 3rem;
-}
-
-.home-hero-sunrise {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 18%, rgba(251, 191, 36, 0.35), transparent 48%),
-    radial-gradient(ellipse at 78% 62%, rgba(125, 211, 252, 0.18), transparent 42%),
-    radial-gradient(ellipse at 18% 72%, rgba(249, 115, 22, 0.22), transparent 45%),
-    linear-gradient(180deg, rgba(30, 27, 75, 0.35), rgba(11, 18, 36, 0.55));
+  background: transparent;
 }
 
 .home-hero-inner {
@@ -215,25 +239,10 @@
 
 .home-divisions {
   position: relative;
+  z-index: 1;
   overflow: visible;
   padding: 0;
-  border-top: 1px solid rgba(240, 180, 41, 0.18);
-}
-
-.home-divisions .position-absolute,
-.home-divisions video {
-  pointer-events: none;
-}
-
-.home-divisions-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(249, 115, 22, 0.2), transparent 50%),
-    radial-gradient(ellipse at 20% 80%, rgba(67, 56, 202, 0.28), transparent 45%),
-    linear-gradient(180deg, rgba(11, 18, 36, 0.55), rgba(15, 23, 42, 0.72));
+  background: transparent;
 }
 
 .home-divisions-inner {
@@ -257,6 +266,7 @@
 .wam-coverflow-sticky {
   position: relative;
   padding: 4.5rem 1.25rem 5rem;
+  background: transparent;
 }
 
 .wam-coverflow-track.is-scroll-driven .wam-coverflow-sticky {
@@ -268,23 +278,20 @@
   align-items: stretch;
   justify-content: center;
   box-sizing: border-box;
+  background: transparent;
 }
 
 /* Division circle — hover must NEVER blank the graphic */
 .home-circle-wrap {
   position: relative;
+  z-index: 1;
   overflow: visible;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 3rem 1rem 4rem;
-  border-top: 1px solid rgba(240, 180, 41, 0.16);
-}
-
-.home-circle-wrap video,
-.home-circle-wrap .home-divisions-veil {
-  pointer-events: none;
+  background: transparent;
 }
 
 .home-circle-inner {
@@ -321,7 +328,9 @@
   display: block;
   color: inherit;
   text-decoration: none;
-  transform-origin: center center;
+  /* Shared artwork center so all wedges stay on one circle */
+  transform-origin: 44.5% 52%;
+  transform: scale(1.06);
   transition:
     transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
     filter 0.35s ease;
@@ -372,47 +381,40 @@
   top: 78%;
 }
 
-/* Pull the three wedges apart from the center */
 .home-circle-segment--top {
-  transform: translate(-3%, -4%);
-  z-index: 2;
+  z-index: 3;
+  transform: translate(-2.5%, -1.20%) scale(1.13) rotate(-2.5deg);
+
 }
 
+/* Right wedge tip sits proud of the seams — nudge out along its radius only */
 .home-circle-segment--right {
-  transform: translate(4.5%, -1%);
-  z-index: 2;
+  z-index: 1;
+  transform: translate(2.35%, 1%) scale(1.04) rotate(-2.5deg);
 }
 
 .home-circle-segment--bottom {
-  transform: translate(0.5%, 4.5%);
-  z-index: 1;
+  z-index: 2;
+    transform: translate(-2.5%, 3.10%) scale(1.13) rotate(-1deg);
+
 }
 
 .home-circle-segment:hover,
 .home-circle-segment:focus-visible {
   z-index: 4;
-  filter: drop-shadow(0 14px 28px rgba(255, 247, 237, 0.55))
+  transform: scale(1.1);
+  filter: drop-shadow(0 14px 28px rgba(155, 143, 128, 0.55))
     drop-shadow(0 0 18px rgba(253, 230, 138, 0.45));
+}
+
+.home-circle-segment--right:hover,
+.home-circle-segment--right:focus-visible {
+  transform: translate(1.35%, 0.45%) scale(1.1);
 }
 
 .home-circle-segment:hover .home-circle-segment-label,
 .home-circle-segment:focus-visible .home-circle-segment-label {
   opacity: 1;
-}
-
-.home-circle-segment--top:hover,
-.home-circle-segment--top:focus-visible {
-  transform: translate(-3%, -4%) scale(1.08);
-}
-
-.home-circle-segment--right:hover,
-.home-circle-segment--right:focus-visible {
-  transform: translate(4.5%, -1%) scale(1.08);
-}
-
-.home-circle-segment--bottom:hover,
-.home-circle-segment--bottom:focus-visible {
-  transform: translate(0.5%, 4.5%) scale(1.08);
 }
 
 .home-circle-segment:focus-visible {

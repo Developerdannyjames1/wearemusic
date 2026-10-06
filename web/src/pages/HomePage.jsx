@@ -6,14 +6,17 @@ import { DivisionCircle } from '../components/DivisionCircle.jsx';
 
 /**
  * Landing: hero + three DBA cards + division circle.
- * Circle hover keeps the base image visible so it never blanks.
+ * One shared background runs the full page.
  */
 export function HomePage() {
   return (
     <div className="home-landing">
-      <section className="home-hero">
+      <div className="home-landing-bg" aria-hidden="true">
         <RainVideo />
-        <div className="home-hero-sunrise" aria-hidden="true" />
+        <div className="home-landing-veil" />
+      </div>
+
+      <section className="home-hero">
         <div className="home-hero-inner">
           <div className="home-hero-mark-wrap">
             <HeroBrandMark className="home-hero-mark" />
@@ -41,16 +44,12 @@ export function HomePage() {
       </section>
 
       <section className="home-divisions">
-        <RainVideo />
-        <div className="home-divisions-veil" aria-hidden="true" />
         <div className="home-divisions-inner">
           <TriangleDBAPicker />
         </div>
       </section>
 
       <section className="home-circle-wrap">
-        <RainVideo />
-        <div className="home-divisions-veil" aria-hidden="true" />
         <div className="home-circle-inner">
           <DivisionCircle />
         </div>
