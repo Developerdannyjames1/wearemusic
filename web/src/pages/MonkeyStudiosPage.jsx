@@ -55,12 +55,12 @@ export function MonkeyStudiosPage() {
 
   return (
     <div className="monkey-page marketing-hero marketing-hero--monkey">
-      {/* 1) Opening — triangle */}
+      {/* 1) Opening — triangle + hover menus */}
       <section className="monkey-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
         <h1 className="jm-hero-brand text-center mb-2">100th Monkey Studios</h1>
         <p className="jm-hero-tagline text-center mb-2">Music productions for the New Age</p>
         <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
-          Three equal paths — Listen · Produce · Release. Headphones lead; the mic stays secondary.
+          Hover Share, Heal, or Inspire — each corner lights up with its own menu.
         </p>
         <div className="jm-triangle-stage">
           <MonkeyStudiosTriangle active={active} onSelect={selectSection} />
@@ -103,21 +103,56 @@ export function MonkeyStudiosPage() {
       {/* 3) Detail panels */}
       <section ref={detailRef} className="jm-detail container pb-5" id="monkey-detail">
         {!active && (
-          <p className="text-secondary text-center small py-4">
-            Choose Listen, Produce, or Release on the triangle above.
-          </p>
+          <motion.div
+            className="jm-empty-state"
+            initial={reduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <p className="text-secondary text-center small mb-4">
+              Choose Share, Heal, or Inspire on the triangle above.
+            </p>
+            <div className="jm-empty-paths">
+              {[
+                {
+                  id: 'share',
+                  title: 'Share',
+                  blurb: 'Listen, share, and partner — catalog that travels.',
+                },
+                {
+                  id: 'heal',
+                  title: 'Heal',
+                  blurb: 'Collaborate and record — sessions that restore.',
+                },
+                {
+                  id: 'inspire',
+                  title: 'Inspire',
+                  blurb: 'Release and outreach — music that reaches further.',
+                },
+              ].map((path) => (
+                <button
+                  key={path.id}
+                  type="button"
+                  className="jm-empty-path"
+                  onClick={() => selectSection(path.id)}
+                >
+                  <span className="jm-empty-path-title">{path.title}</span>
+                  <span className="jm-empty-path-blurb">{path.blurb}</span>
+                </button>
+              ))}
+            </div>
+          </motion.div>
         )}
 
-        {active === 'listen' && (
+        {active === 'share' && (
           <motion.div
             className="jm-panel monkey-panel"
             initial={reduceMotion ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <h2 className="jm-panel-title">Listen</h2>
+            <h2 className="jm-panel-title">Share</h2>
             <p className="marketing-prose mb-4">
-              Catalog preview — songs, albums, and studio cuts ready to stream. Premium titles unlock after purchase.
+              Listen and share — catalog previews, studio cuts, and partners who help the music travel.
             </p>
             {err && <p className="text-danger small">{err}</p>}
             <div className="row g-3">
@@ -147,31 +182,30 @@ export function MonkeyStudiosPage() {
           </motion.div>
         )}
 
-        {active === 'produce' && (
+        {active === 'heal' && (
           <motion.div
             className="jm-panel monkey-panel"
             initial={reduceMotion ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <h2 className="jm-panel-title">Produce</h2>
+            <h2 className="jm-panel-title">Heal</h2>
             <p className="marketing-prose mb-4">
-              Studio craft for the New Age — tracking, arranging, and finishing work that sounds intentional on any
-              system.
+              Collaborate and record — studio craft that restores intention to every take.
             </p>
             <div className="row g-3">
               {[
                 {
-                  title: 'Session capture',
-                  body: 'Room takes and overdubs from emerging artists — preserved with clarity for release or study.',
+                  title: 'Collaborate',
+                  body: 'Local creators in the 100th Monkey pipeline — from demo sketch to catalog-ready master.',
+                },
+                {
+                  title: 'Record',
+                  body: 'Room takes and overdubs preserved with clarity — tracking that sounds intentional on any system.',
                 },
                 {
                   title: 'Mix & master classes',
                   body: 'Modules that walk the boards: balance, depth, and finishing without chasing trends.',
-                },
-                {
-                  title: 'Artist collaboration',
-                  body: 'Local creators in the 100th Monkey pipeline — from demo sketch to catalog-ready master.',
                 },
               ].map((card) => (
                 <div key={card.title} className="col-md-4">
@@ -185,22 +219,21 @@ export function MonkeyStudiosPage() {
           </motion.div>
         )}
 
-        {active === 'release' && (
+        {active === 'inspire' && (
           <motion.div
             className="jm-panel monkey-panel"
             initial={reduceMotion ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <h2 className="jm-panel-title">Release</h2>
+            <h2 className="jm-panel-title">Inspire</h2>
             <p className="marketing-prose mb-4">
-              From the studio floor to your library — purchases and subscriptions unlock masters, teasers, and
-              curriculum for the long haul.
+              Release and outreach — from the studio floor to listeners, partners, and the wider community.
             </p>
             <div className="row g-3">
               <div className="col-md-6">
                 <div className="jm-program-card h-100 monkey-card">
-                  <h3>Own the take</h3>
+                  <h3>Release</h3>
                   <p>
                     Buy premium tracks once; they stay on your account. Stream when you are signed in — no disposable
                     links.
@@ -209,10 +242,10 @@ export function MonkeyStudiosPage() {
               </div>
               <div className="col-md-6">
                 <div className="jm-program-card h-100 monkey-card">
-                  <h3>Publish with us</h3>
+                  <h3>Outreach</h3>
                   <p>
-                    Artists and coaches can publish audio and video into the Monkey division. Sign in to manage your
-                    catalog and reach listeners.
+                    Artists and coaches publish audio and video into the Monkey division — reach listeners and grow the
+                    catalog together.
                   </p>
                 </div>
               </div>

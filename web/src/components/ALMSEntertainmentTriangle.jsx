@@ -1,3 +1,6 @@
+import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+
 /** Equilateral outer triangle — same equal-area geometry as JM Method */
 const A = [200, 36];
 const B = [40, 320];
@@ -9,27 +12,49 @@ const M_AB = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
 const M_BC = [(B[0] + C[0]) / 2, (B[1] + C[1]) / 2];
 const M_CA = [(C[0] + A[0]) / 2, (C[1] + A[1]) / 2];
 
+/**
+ * Three equal-area corners:
+ * top = Share · left = Inspire · right = Heal
+ */
 const THIRDS = [
-  {
-    id: 'inspire',
-    label: 'Inspire',
-    path: `M ${A.join(' ')} L ${M_AB.join(' ')} L ${G.join(' ')} L ${M_CA.join(' ')} Z`,
-    labelX: (A[0] + M_AB[0] + G[0] + M_CA[0]) / 4,
-    labelY: (A[1] + M_AB[1] + G[1] + M_CA[1]) / 4,
-  },
   {
     id: 'share',
     label: 'Share',
+    corner: 'top',
+    path: `M ${A.join(' ')} L ${M_AB.join(' ')} L ${G.join(' ')} L ${M_CA.join(' ')} Z`,
+    labelX: (A[0] + M_AB[0] + G[0] + M_CA[0]) / 4,
+    labelY: (A[1] + M_AB[1] + G[1] + M_CA[1]) / 4,
+    menu: [
+      { label: 'Service', action: 'section' },
+      { label: 'Livestream', action: 'section' },
+      { label: 'Partner With Us', to: '/partner-with-us' },
+    ],
+  },
+  {
+    id: 'inspire',
+    label: 'Inspire',
+    corner: 'left',
     path: `M ${B.join(' ')} L ${M_BC.join(' ')} L ${G.join(' ')} L ${M_AB.join(' ')} Z`,
     labelX: (B[0] + M_BC[0] + G[0] + M_AB[0]) / 4,
     labelY: (B[1] + M_BC[1] + G[1] + M_AB[1]) / 4 + 4,
+    menu: [
+      { label: 'Collaborate', action: 'section' },
+      { label: 'Masterclass', action: 'section' },
+      { label: 'Partner With Us', to: '/partner-with-us' },
+    ],
   },
   {
     id: 'heal',
     label: 'Heal',
+    corner: 'right',
     path: `M ${C.join(' ')} L ${M_CA.join(' ')} L ${G.join(' ')} L ${M_BC.join(' ')} Z`,
     labelX: (C[0] + M_CA[0] + G[0] + M_BC[0]) / 4,
     labelY: (C[1] + M_CA[1] + G[1] + M_BC[1]) / 4 + 4,
+    menu: [
+      { label: 'Host', action: 'section' },
+      { label: 'Perform', action: 'section' },
+      { label: 'Partner With Us', to: '/partner-with-us' },
+    ],
   },
 ];
 
@@ -69,13 +94,32 @@ function DimTrebleClef() {
 }
 
 export function ALMSEntertainmentTriangle({ active, onSelect, className = '' }) {
+  const [hoverId, setHoverId] = useState(null);
+  const leaveTimer = useRef(null);
+
+  function openMenu(id) {
+    if (leaveTimer.current) {
+      window.clearTimeout(leaveTimer.current);
+      leaveTimer.current = null;
+    }
+    setHoverId(id);
+  }
+
+  function scheduleClose() {
+    if (leaveTimer.current) window.clearTimeout(leaveTimer.current);
+    leaveTimer.current = window.setTimeout(() => setHoverId(null), 140);
+  }
+
   return (
-    <div className={`jm-triangle alms-triangle ${className}`.trim()}>
+    <div
+      className={`jm-triangle alms-triangle ${className}`.trim()}
+      onMouseLeave={scheduleClose}
+    >
       <svg
         className="jm-triangle-svg"
         viewBox="0 0 400 360"
         role="img"
-        aria-label="ALMS Entertainment triangle: Inspire, Share, Heal — equal sections"
+        aria-label="ALMS Entertainment triangle: Share, Inspire, Heal — equal sections"
       >
         <defs>
           <linearGradient id="alms-tri-sky" x1="50%" y1="0%" x2="50%" y2="70%">
@@ -134,23 +178,26 @@ export function ALMSEntertainmentTriangle({ active, onSelect, className = '' }) 
         <DimTrebleClef />
 
         {THIRDS.map((s) => {
-          const isActive = active === s.id;
+          const lit = hoverId === s.id || active === s.id;
           return (
             <g key={s.id}>
               <path
                 d={s.path}
-                className={`jm-triangle-region ${isActive ? 'is-active' : ''}`}
-                fill={isActive ? 'rgba(251, 191, 36, 0.28)' : 'rgba(255,255,255,0.06)'}
+                className={`jm-triangle-region${lit ? ' is-lit' : ''}${active === s.id ? ' is-active' : ''}`}
+                fill={lit ? 'rgba(251, 191, 36, 0.32)' : 'rgba(255,255,255,0.06)'}
                 stroke="rgba(254, 243, 199, 0.45)"
                 strokeWidth="1.5"
                 role="button"
                 tabIndex={0}
-                aria-label={`Open ${s.label}`}
-                aria-pressed={isActive}
+                aria-label={`${s.label} menu`}
+                aria-expanded={hoverId === s.id}
+                onMouseEnter={() => openMenu(s.id)}
+                onFocus={() => openMenu(s.id)}
                 onClick={() => onSelect?.(s.id)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
+                    openMenu(s.id);
                     onSelect?.(s.id);
                   }
                 }}
@@ -160,7 +207,7 @@ export function ALMSEntertainmentTriangle({ active, onSelect, className = '' }) 
                 y={s.labelY}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                className={`jm-triangle-label ${isActive ? 'is-active' : ''}`}
+                className={`jm-triangle-label${lit ? ' is-active' : ''}`}
                 style={{ pointerEvents: 'none' }}
               >
                 {s.label}
@@ -171,6 +218,36 @@ export function ALMSEntertainmentTriangle({ active, onSelect, className = '' }) 
 
         <MicIcon x={G[0] - 28} y={G[1] - 28} />
       </svg>
+
+      {THIRDS.map((s) => (
+        <div
+          key={`${s.id}-menu`}
+          className={`jm-tri-flyout jm-tri-flyout--${s.corner}${hoverId === s.id ? ' is-open' : ''}`}
+          onMouseEnter={() => openMenu(s.id)}
+          onMouseLeave={scheduleClose}
+        >
+          <p className="jm-tri-flyout-title">{s.label}</p>
+          <ul className="jm-tri-flyout-list">
+            {s.menu.map((item) => (
+              <li key={item.label}>
+                {item.to ? (
+                  <Link to={item.to} className="jm-tri-flyout-link">
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="jm-tri-flyout-link"
+                    onClick={() => onSelect?.(s.id)}
+                  >
+                    {item.label}
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }

@@ -69,12 +69,12 @@ export function ALMSEntertainmentPage() {
 
   return (
     <div className="alms-page marketing-hero marketing-hero--alms">
-      {/* 1) Opening: ALMS triangle */}
+      {/* 1) Opening: ALMS triangle + hover menus */}
       <section className="alms-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
         <h1 className="jm-hero-brand text-center mb-2">ALMS Entertainment</h1>
         <p className="jm-hero-tagline text-center mb-2">Music performances for the New Age</p>
         <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
-          Three equal paths — Inspire · Share · Heal. Tap a corner to go deeper.
+          Hover Share, Heal, or Inspire — each corner lights up with its own menu.
         </p>
         <div className="jm-triangle-stage">
           <ALMSEntertainmentTriangle active={active} onSelect={selectSection} />
@@ -131,37 +131,42 @@ export function ALMSEntertainmentPage() {
       {/* 3) Detail panels */}
       <section ref={detailRef} className="jm-detail container pb-5" id="alms-detail">
         {!active && (
-          <p className="text-secondary text-center small py-4">
-            Choose Inspire, Share, or Heal on the triangle above.
-          </p>
-        )}
-
-        {active === 'inspire' && (
           <motion.div
-            className="jm-panel"
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
+            className="jm-empty-state"
+            initial={reduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
           >
-            <h2 className="jm-panel-title">Inspire</h2>
-            <p className="marketing-prose mb-4">
-              Venues and clients we serve — accessible, community-healing engagements from daytime cafes to{' '}
-              <strong>Service Our Seniors</strong>.
+            <p className="text-secondary text-center small mb-4">
+              Choose Share, Heal, or Inspire on the triangle above.
             </p>
-            <div className="row g-3">
-              {VENUES.map((v) => (
-                <div key={v.title} className="col-md-6">
-                  <div className="jm-program-card h-100">
-                    <h3>{v.title}</h3>
-                    <p>{v.body}</p>
-                  </div>
-                </div>
+            <div className="jm-empty-paths">
+              {[
+                {
+                  id: 'share',
+                  title: 'Share',
+                  blurb: 'Service and livestream — music that reaches the room and beyond.',
+                },
+                {
+                  id: 'heal',
+                  title: 'Heal',
+                  blurb: 'Host and perform — sets that settle a space.',
+                },
+                {
+                  id: 'inspire',
+                  title: 'Inspire',
+                  blurb: 'Collaborate and masterclass — craft that lifts others.',
+                },
+              ].map((path) => (
+                <button
+                  key={path.id}
+                  type="button"
+                  className="jm-empty-path"
+                  onClick={() => selectSection(path.id)}
+                >
+                  <span className="jm-empty-path-title">{path.title}</span>
+                  <span className="jm-empty-path-blurb">{path.blurb}</span>
+                </button>
               ))}
-            </div>
-            <div className="text-center mt-4">
-              <Link to="/alms/book" className="btn btn-light rounded-pill px-4">
-                Book for your venue
-              </Link>
             </div>
           </motion.div>
         )}
@@ -175,9 +180,27 @@ export function ALMSEntertainmentPage() {
           >
             <h2 className="jm-panel-title">Share</h2>
             <p className="marketing-prose mb-4">
-              Musician community — create a login, upload performance videos, and show how live music is changing
-              rooms and lives. Community-driven content powers the ALMS showcase.
+              Service and livestream — community sets, musician stories, and live moments that travel past the room.
             </p>
+
+            <div className="row g-3 mb-4">
+              <div className="col-md-6">
+                <div className="jm-program-card h-100">
+                  <h3>Service</h3>
+                  <p>
+                    Accessible gigs for cafes, holidays, and senior communities — music that serves connection first.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="jm-program-card h-100">
+                  <h3>Livestream</h3>
+                  <p>
+                    Share sets beyond the venue — upload performance videos and grow the ALMS community showcase.
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <div className="jm-program-card mb-4">
               <h3>Musician portal</h3>
@@ -199,7 +222,13 @@ export function ALMSEntertainmentPage() {
               Community showcase
             </h3>
             <div className="row g-3">
-              {(artists.length ? artists : [{ id: 'p1', stageName: 'Your performance' }, { id: 'p2', stageName: 'Upload a set' }, { id: 'p3', stageName: 'Change the room' }])
+              {(artists.length
+                ? artists
+                : [
+                    { id: 'p1', stageName: 'Your performance' },
+                    { id: 'p2', stageName: 'Upload a set' },
+                    { id: 'p3', stageName: 'Change the room' },
+                  ])
                 .slice(0, 6)
                 .map((a) => (
                   <div key={a.id} className="col-md-4">
@@ -229,25 +258,24 @@ export function ALMSEntertainmentPage() {
           >
             <h2 className="jm-panel-title">Heal</h2>
             <p className="marketing-prose mb-4">
-              Educational space for why live sound can settle a room — music frequency, resonance with water, and the
-              body&apos;s composition as a rationale for healing through music.
+              Host and perform — why live sound can settle a room, and how venues bring that healing into the space.
             </p>
             <div className="row g-3">
               <div className="col-md-4">
                 <div className="jm-program-card h-100">
-                  <h3>Music frequency</h3>
+                  <h3>Host</h3>
                   <p>
-                    Tone and tempo shape atmosphere. ALMS sets favor frequencies and pacing that invite calm,
-                    conversation, and presence — not volume for its own sake.
+                    Daytime cafes, holiday rooms, and private events — host a set that warms the room without
+                    overwhelming conversation.
                   </p>
                 </div>
               </div>
               <div className="col-md-4">
                 <div className="jm-program-card h-100">
-                  <h3>Resonance with water</h3>
+                  <h3>Perform</h3>
                   <p>
-                    Sound moves through water as vibration. When music meets a hydrated body, listeners often feel the
-                    shift before they name it — a felt sense of settling.
+                    Tone and tempo that invite calm and presence. ALMS sets favor frequencies that land as healing —
+                    not volume for its own sake.
                   </p>
                 </div>
               </div>
@@ -255,8 +283,8 @@ export function ALMSEntertainmentPage() {
                 <div className="jm-program-card h-100">
                   <h3>~70% water</h3>
                   <p>
-                    The human body is roughly seventy percent water. That composition is part of why live acoustic
-                    music can land as healing — we are built to carry vibration.
+                    The body is roughly seventy percent water. Live acoustic music can land as healing because we are
+                    built to carry vibration.
                   </p>
                 </div>
               </div>
@@ -268,6 +296,55 @@ export function ALMSEntertainmentPage() {
               </p>
               <footer>ALMS Entertainment</footer>
             </blockquote>
+          </motion.div>
+        )}
+
+        {active === 'inspire' && (
+          <motion.div
+            className="jm-panel"
+            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
+          >
+            <h2 className="jm-panel-title">Inspire</h2>
+            <p className="marketing-prose mb-4">
+              Collaborate and masterclass — venues, clients, and craft that lift the next room and the next musician.
+            </p>
+            <div className="row g-3 mb-4">
+              <div className="col-md-6">
+                <div className="jm-program-card h-100">
+                  <h3>Collaborate</h3>
+                  <p>
+                    Partner with ALMS for community-healing engagements — from daytime cafes to{' '}
+                    <strong>Service Our Seniors</strong>.
+                  </p>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="jm-program-card h-100">
+                  <h3>Masterclass</h3>
+                  <p>
+                    Storyteller setlists, audience connection, and performance craft for musicians ready to deepen
+                    their live work.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="row g-3">
+              {VENUES.map((v) => (
+                <div key={v.title} className="col-md-6">
+                  <div className="jm-program-card h-100">
+                    <h3>{v.title}</h3>
+                    <p>{v.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-4">
+              <Link to="/alms/book" className="btn btn-light rounded-pill px-4">
+                Book for your venue
+              </Link>
+            </div>
           </motion.div>
         )}
 

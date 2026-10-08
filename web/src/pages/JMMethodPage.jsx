@@ -53,12 +53,12 @@ export function JMMethodPage() {
 
   return (
     <div className="jm-page marketing-hero marketing-hero--jm">
-      {/* 1) Opening: equal triangle + keyboard */}
+      {/* 1) Opening: equal triangle + hover menus */}
       <section className="jm-triangle-hero min-vh-100 d-flex flex-column align-items-center justify-content-center">
         <h1 className="jm-hero-brand text-center mb-2">JM Method</h1>
         <p className="jm-hero-tagline text-center mb-2">Music lessons for the New Age</p>
-        <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 480 }}>
-          Three equal paths — Discipline · Creativity · Harmony. Tap a corner to go deeper.
+        <p className="small text-secondary text-center mb-4 px-3" style={{ maxWidth: 520 }}>
+          Hover Harmony, Creativity, or Discipline — each corner lights up with its own menu.
         </p>
         <div className="jm-triangle-stage">
           <JMMethodTriangle active={active} onSelect={selectSection} />
@@ -98,25 +98,25 @@ export function JMMethodPage() {
               className="jm-empty-hero-img"
             />
             <p className="jm-empty-lead">
-              Choose <strong>Discipline</strong>, <strong>Creativity</strong>, or <strong>Harmony</strong> on the
-              triangle above — or tap a path below.
+              Hover <strong>Harmony</strong> (top), <strong>Creativity</strong> (right), or{' '}
+              <strong>Discipline</strong> (left) for each menu — or tap a path below.
             </p>
             <div className="jm-empty-paths">
               {[
                 {
-                  id: 'discipline',
-                  title: 'Discipline',
-                  blurb: 'Seven instruments. Daily practice. Quote of the day.',
+                  id: 'harmony',
+                  title: 'Harmony',
+                  blurb: 'Listen, book, and partner — performances that connect.',
                 },
                 {
                   id: 'creativity',
                   title: 'Creativity',
-                  blurb: 'Virtuoso & Rising Star — curriculum for every learner.',
+                  blurb: 'Songs and learn pathways — Virtuoso to Rising Star.',
                 },
                 {
-                  id: 'harmony',
-                  title: 'Harmony',
-                  blurb: 'Recitals, showcases, and competition moments.',
+                  id: 'discipline',
+                  title: 'Discipline',
+                  blurb: 'Instruments and programs — practice that sticks.',
                 },
               ].map((p) => (
                 <button

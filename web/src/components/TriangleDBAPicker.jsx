@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+/** Cycle starts & ends on headphones after one full turn */
 const DBAS = [
+  {
+    to: '/100th-monkey-studios',
+    title: '100th Monkey Studios',
+    image: '/triangles/triangle-headphone.png',
+  },
   {
     to: '/jm-method',
     title: 'JM Method',
@@ -11,11 +17,6 @@ const DBAS = [
     to: '/alms-entertainment',
     title: 'ALMS Entertainment',
     image: '/triangles/triangle-mic.png',
-  },
-  {
-    to: '/100th-monkey-studios',
-    title: '100th Monkey Studios',
-    image: '/triangles/triangle-headphone.png',
   },
 ];
 
@@ -37,7 +38,7 @@ function prefersReducedMotion() {
 
 /**
  * Three face-forward triangles: center is larger.
- * Rotates as you scroll through the section; also click / drag / arrows.
+ * Scroll drives one full 360° cycle: headphones → piano → mic → headphones.
  */
 export function TriangleDBAPicker() {
   const [active, setActive] = useState(0);
@@ -79,8 +80,9 @@ export function TriangleDBAPicker() {
       const scrolled = Math.min(Math.max(-rect.top, 0), travel);
       const progress = scrolled / travel;
 
-      // One full rotation through all three as the section is scrolled
-      const idx = Math.min(DBAS.length - 1, Math.floor(progress * DBAS.length));
+      // Full 360°: headphones → JM → ALMS → headphones (4 stops)
+      const stops = DBAS.length + 1;
+      const idx = wrapIndex(Math.min(DBAS.length, Math.floor(progress * stops)));
       if (idx !== activeRef.current) goTo(idx);
     }
 
