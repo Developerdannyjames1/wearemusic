@@ -1,0 +1,27 @@
+name: deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Deploy staging
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS_STAGE }}
+          username: ${{ secrets.USERNAME_STAGE }}
+          key: ${{ secrets.EC2_SSH_KEY_STAGE }}
+          port: ${{ secrets.PORT_STAGE }}
+          timeout: 120s
+          script: |
+            cd /var/www/staging1_tes_usr/data/www/staging1.testlinksdesign.com
+            npm run pm2:stop
+            git pull origin main
+            npm install
+            npm run build
+            npm run pm2:start
