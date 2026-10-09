@@ -7,9 +7,16 @@
     "dev:server": "npm run dev --prefix server",
     "dev:all": "concurrently -n web,api -c blue,magenta \"npm run dev --prefix web\" \"npm run dev --prefix server\"",
     "build": "npm run build --prefix web",
-    "preview": "npm run preview --prefix web"
+    "preview": "npm run preview --prefix web",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:stop": "pm2 stop wearemusic-api wearemusic-web",
+    "pm2:restart": "pm2 restart wearemusic-api wearemusic-web",
+    "pm2:delete": "pm2 delete wearemusic-api wearemusic-web",
+    "pm2:logs": "pm2 logs wearemusic-api wearemusic-web",
+    "pm2:status": "pm2 status"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.0",
+    "pm2": "^6.0.8"
   }
 }
